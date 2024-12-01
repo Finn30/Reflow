@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({Key? key}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +45,7 @@ class FirstScreen extends StatelessWidget {
 
 class SecondScreen extends StatelessWidget {
   const SecondScreen({Key? key}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,4 +63,3 @@ class SecondScreen extends StatelessWidget {
     );
   }
 }
- 
