@@ -1,18 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:project_fix/main.dart';
+import 'package:project_fix/screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_fix/screens/main_screen.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginPage extends StatefulWidget {
+  // const LoginPage({Key? key}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool isChecked = false;  // Variable to track the checkbox state
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();  // Form key for validation
+  bool isChecked = false; // Variable to track the checkbox state
+  bool _isPasswordVisible = false; // Variable to track the visibility of the password
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // Form key for validation
 
   // Controllers for the input fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  // Firebase Authentication instance
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    _auth.authStateChanges().listen((event){
+      setState(() {
+        user = event;
+      });
+    });
+  }
+
+  // Login function
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      // If the form is valid and checkbox is checked
+      if (isChecked) {
+        try {
+          // Sign in with Firebase Auth
+          UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Login successful')),
+          );
+
+          // Navigate to main screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MenuScreen()),
+          );
+        } on FirebaseAuthException catch (e) {
+          // Handle Firebase login errors
+          String errorMessage = 'Email or password is incorrect';
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
+      } else {
+        // If checkbox is not checked
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please agree to the User Agreement and Privacy Policy')),
+        );
+      }
+    } else {
+      // Show error message if the form is invalid
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill out all fields')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,  // Attach the form key
+          key: _formKey, // Attach the form key
           child: Column(
             children: [
               // Input Email
@@ -40,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  // You can add more email validation logic here if needed
                   return null;
                 },
               ),
@@ -49,12 +111,21 @@ class _LoginPageState extends State<LoginPage> {
               // Input Password
               TextFormField(
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: !_isPasswordVisible, // Toggle password visibility
                 decoration: InputDecoration(
                   labelText: 'Password',
                   hintText: 'Enter your password',
                   prefixIcon: Icon(Icons.lock),
-                  suffixIcon: Icon(Icons.visibility),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                      });
+                    },
+                  ),
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
@@ -73,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                     value: isChecked,
                     onChanged: (value) {
                       setState(() {
-                        isChecked = value ?? false;  // Update the checkbox state
+                        isChecked = value ?? false; // Update the checkbox state
                       });
                     },
                   ),
@@ -87,38 +158,40 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Spacer(),
 
+              Center(
+                child: 
+                  SizedBox(
+                    height: 50,
+                    width: 200,
+                    child: SignInButton(Buttons.google, text: "Log in with Google", onPressed: handleGoogleLogin),
+                  )
+              ),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text('or'),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+
               // Tombol Login
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),
                 ),
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // If the form is valid and checkbox is checked
-                    if (isChecked) {
-                      // Show success message
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Login successful')),
-                      );
-
-                      // Navigate to main screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyApp()),
-                      );
-                    } else {
-                      // If checkbox is not checked
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please agree to the User Agreement and Privacy Policy')),
-                      );
-                    }
-                  } else {
-                    // Show error message if the form is invalid
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Please fill out all fields')),
-                    );
-                  }
-                },
+                onPressed: _login,
                 child: Text('Login'),
               ),
 
@@ -146,4 +219,24 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  void handleGoogleLogin() async {
+    try {
+      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      UserCredential userCredential = await _auth.signInWithProvider(googleProvider);
+      if (userCredential.user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MenuScreen()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google Sign-In failed. Please try again.')),
+      );
+      print(e);
+    }
+  }
+
 }
+
+

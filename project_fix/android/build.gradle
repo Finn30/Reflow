@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()  // Ensure this is present
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.25"  // Ensure this is correct
+        classpath 'com.android.tools.build:gradle:7.0.4'  // Or the appropriate version for your project
+        classpath 'com.google.gms:google-services:4.4.2'  // Ensure this is correct
+    }
+}
+
 allprojects {
     repositories {
         google()
