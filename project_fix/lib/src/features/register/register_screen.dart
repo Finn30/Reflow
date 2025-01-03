@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project_fix/src/features/register/password_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool useEmail = false;
   TextEditingController inputController = TextEditingController();
+  TextEditingController verificationCodeController = TextEditingController();
   bool isChecked = false;
 
   void toogleRegisterMethod() {
@@ -16,6 +18,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       useEmail = !useEmail; // Toggle nilai useEmail
       inputController.clear(); // Bersihkan input
     });
+  }
+
+  void sendVerificationCode() {
+    // Tambahkan logika pengiriman kode verifikasi di sini
+    print('Kode verifikasi dikirim ke ${inputController.text}');
   }
 
   @override
@@ -26,7 +33,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
-            // Aksi untuk kembali
           },
         ),
         title: Text(useEmail ? 'Pendaftaraan Email' : 'Pendaftaran Seluler'),
@@ -115,16 +121,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
             const SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.grey[200],
-                hintText: 'Silakan masukkan kode verifikasi...',
-                suffixText: 'Mengirim',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(30),
               ),
-              keyboardType: TextInputType.number,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: verificationCodeController,
+                      decoration: InputDecoration(
+                        hintText: 'Silakan masukkan kode verifikasi...',
+                        border: InputBorder.none,
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      sendVerificationCode();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: Text('Mengirim'),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -138,7 +167,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Lingkaran luar (selalu putih dengan border)
                       Container(
                         width: 24,
                         height: 24,
@@ -148,7 +176,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      // Lingkaran dalam (biru jika isChecked true, transparan jika false)
                       Container(
                         width: 16,
                         height: 16,
@@ -187,7 +214,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Aksi untuk tombol langkah berikutnya
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PasswordScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.shade300,
