@@ -37,7 +37,8 @@ dependencies:
   firebase_core: ^3.8.1
   firebase_auth: ^5.3.4
   sign_in_button: ^3.2.0
-  flutter_native_splash: ^2.4.4
+  flutter_native_splash: ^2.4.0
+  get: ^4.3.8
 
 dev_dependencies:
   flutter_test:
