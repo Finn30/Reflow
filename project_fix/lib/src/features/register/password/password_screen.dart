@@ -16,7 +16,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   // Fungsi untuk validasi password
   bool validatePassword(String password) {
-    final regex = RegExp(r'^(?=.[a-z])(?=.[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
+    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
     return regex.hasMatch(password);
   }
 
@@ -31,13 +31,12 @@ class _PasswordScreenState extends State<PasswordScreen> {
         DocumentReference userDoc = FirebaseFirestore.instance
             .collection('user')
             .doc(currentUser.uid);
-            Map<String, dynamic> data = {
-              'email': currentUser.email,
-              'password': passwordController.text,
-            };
-        userDoc.set(data).whenComplete(() {
-          print('Data berhasil ditambahkan ke Firestore');
-        });
+        Map<String, dynamic> data = {
+          'email': currentUser.email,
+          'password': passwordController.text,
+        };
+        await userDoc.set(data);
+
         await FirebaseAuth.instance.signOut();
 
         // Beralih ke halaman login setelah berhasil membuat password
@@ -77,61 +76,21 @@ class _PasswordScreenState extends State<PasswordScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                controller: passwordController,
-                obscureText: !isPasswordVisible,
-                decoration: InputDecoration(
-                  hintText: 'Silakan masukkan password',
-                  border: InputBorder.none,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
+            _buildPasswordField('Silakan masukkan password', passwordController,
+                isPasswordVisible, (value) {
+              setState(() {
+                isPasswordVisible = !isPasswordVisible;
+              });
+            }),
             const SizedBox(height: 16),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                controller: confirmPasswordController,
-                obscureText: !isConfirmPasswordVisible,
-                decoration: InputDecoration(
-                  hintText: 'Silakan masukkan konfirmasi password',
-                  border: InputBorder.none,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      isConfirmPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
+            _buildPasswordField(
+                'Silakan masukkan konfirmasi password',
+                confirmPasswordController,
+                isConfirmPasswordVisible, (value) {
+              setState(() {
+                isConfirmPasswordVisible = !isConfirmPasswordVisible;
+              });
+            }),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -176,6 +135,31 @@ class _PasswordScreenState extends State<PasswordScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(String hintText, TextEditingController controller,
+      bool isVisible, Function(bool) toggleVisibility) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(30),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: TextField(
+        controller: controller,
+        obscureText: !isVisible,
+        decoration: InputDecoration(
+          hintText: hintText,
+          border: InputBorder.none,
+          suffixIcon: IconButton(
+            icon: Icon(
+              isVisible ? Icons.visibility : Icons.visibility_off,
+            ),
+            onPressed: () => toggleVisibility(isVisible),
+          ),
         ),
       ),
     );
