@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_fix/src/constant/image_string.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:project_fix/src/features/about%20us/aboutus_screen.dart';
 import 'package:project_fix/src/features/car%20guide/carguide_screen.dart';
 import 'package:project_fix/src/features/feedback/feedback_screen.dart';
@@ -188,8 +189,12 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(
-        child: Text('Home Screen'),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target:
+              LatLng(-6.200000, 106.816666), // Example coordinates (Jakarta)
+          zoom: 10,
+        ),
       ),
     );
   }
