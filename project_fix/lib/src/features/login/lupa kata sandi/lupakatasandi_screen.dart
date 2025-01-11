@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/features/login/lupa%20kata%20sandi/reset%20password/resetpassword_screen.dart';
 
 class LupaKataSandiScreen extends StatelessWidget {
   LupaKataSandiScreen({Key? key}) : super(key: key);
@@ -36,8 +37,10 @@ class LupaKataSandiScreen extends StatelessWidget {
                   minimumSize: Size(300, 50),
                 ),
                 onPressed: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ResetPasswordScreen()));
                 },
                 child: Text('Kirim'),
               ),
