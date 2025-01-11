@@ -49,6 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Memeriksa kecocokan password
       if (userData['password'] == password) {
+        await _auth.signInWithEmailAndPassword(
+          email: input,
+          password: password,
+        );
         // Jika login berhasil
         Navigator.pushReplacement(
           context,
