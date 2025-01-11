@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project_fix/src/constant/image_string.dart';
 import 'package:project_fix/src/features/home%20screen/home_screen.dart';
+import 'package:project_fix/src/features/login/lupa%20kata%20sandi/lupakatasandi_screen.dart';
 import 'package:project_fix/src/features/register/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -316,7 +317,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     style: TextStyle(color: Colors.blue)),
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            LupaKataSandiScreen()),
+                                  );
+                                },
                                 child: Text("Lupa kata sandi?",
                                     style: TextStyle(color: Colors.grey[700])),
                               ),
