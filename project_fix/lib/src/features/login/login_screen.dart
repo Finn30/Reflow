@@ -200,17 +200,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: TextFormField(
+                              controller: passwordController,
                               obscureText: obscurePassword,
                               decoration: InputDecoration(
                                 suffixIcon: GestureDetector(
-                                  onTapDown: (_) {
+                                  onTap: () {
                                     setState(() {
-                                      obscurePassword = false;
-                                    });
-                                  },
-                                  onTapUp: (_) {
-                                    setState(() {
-                                      obscurePassword = true;
+                                      obscurePassword = !obscurePassword;
                                     });
                                   },
                                   child: Icon(
@@ -289,20 +285,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeScreen()),
-                                );
-                              },
+                              onPressed: isChecked ? login : null,
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 padding: EdgeInsets.symmetric(vertical: 15),
                                 // backgroundColor: Colors.grey[400],
-                                backgroundColor: Colors.blue,
+                                backgroundColor:
+                                    isChecked ? Colors.blue : Colors.grey[400],
                                 foregroundColor: Colors.white,
                               ),
                               child: Text("Login"),
