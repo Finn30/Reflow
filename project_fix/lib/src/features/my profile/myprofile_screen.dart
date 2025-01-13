@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/features/my%20profile/change%20password/changepassword_screen.dart';
 import 'package:project_fix/src/features/welcome%20screen/welcome_screen.dart';
 import 'first name/firstname_screen.dart';
 import 'last name/lastname_screen.dart';
@@ -150,6 +151,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               icon: Icons.lock,
               text: 'Change Password',
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangePasswordScreen()),
+                );
                 // TODO: Implement change password
               },
             ),
