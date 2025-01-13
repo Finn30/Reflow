@@ -234,13 +234,16 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target:
-              LatLng(-6.200000, 106.816666), // Example coordinates (Jakarta)
-          zoom: 10,
-        ),
+      body: Center(
+        child: Text('Home Screen'),
       ),
+      // GoogleMap(
+      //   initialCameraPosition: CameraPosition(
+      //     target:
+      //         LatLng(-6.200000, 106.816666), // Example coordinates (Jakarta)
+      //     zoom: 10,
+      //   ),
+      // ),
     );
   }
 }
