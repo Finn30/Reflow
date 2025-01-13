@@ -23,8 +23,11 @@ class _LastNameScreenState extends State<LastNameScreen> {
       appBar: AppBar(
         title: const Text('Edit Last Name'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
+          TextButton(
+            child: const Text(
+              'Save',
+              style: TextStyle(fontSize: 16, color: Colors.blue),
+            ),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Navigator.pop(context, _lastNameController.text);

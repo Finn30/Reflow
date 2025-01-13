@@ -53,7 +53,8 @@ class MyWalletScreen extends StatelessWidget {
                                 fontSize: 40.0,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
-                        Text('\$',
+                        SizedBox(width: 2.0),
+                        Text('IDR',
                             style: TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
@@ -65,7 +66,7 @@ class MyWalletScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(width: 8.0),
-                        Text('(including 0.00 \$ gift)',
+                        Text('(including 0.00 IDR gift)',
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.white)),
                       ],

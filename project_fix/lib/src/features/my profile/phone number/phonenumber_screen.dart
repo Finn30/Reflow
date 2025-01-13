@@ -23,8 +23,11 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
       appBar: AppBar(
         title: const Text('Edit Phone Number'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
+          TextButton(
+            child: const Text(
+              'Save',
+              style: TextStyle(fontSize: 16, color: Colors.blue),
+            ),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Navigator.pop(context, _phoneNumberController.text);

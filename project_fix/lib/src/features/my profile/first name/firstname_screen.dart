@@ -23,8 +23,11 @@ class _FirstNameScreenState extends State<FirstNameScreen> {
       appBar: AppBar(
         title: const Text('Edit First Name'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
+          TextButton(
+            child: const Text(
+              'Save',
+              style: TextStyle(fontSize: 16, color: Colors.blue),
+            ),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Navigator.pop(context, _firstNameController.text);

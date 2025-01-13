@@ -16,8 +16,11 @@ class _GenderScreenState extends State<GenderScreen> {
       appBar: AppBar(
         title: const Text('Edit Gender'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
+          TextButton(
+            child: const Text(
+              'Save',
+              style: TextStyle(fontSize: 16, color: Colors.blue),
+            ),
             onPressed: () {
               if (_selectedGender != null) {
                 Navigator.pop(context, _selectedGender);
