@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project_fix/src/features/login/login_screen.dart';
+import 'package:project_fix/src/features/register/password/username/username_screen.dart'; // Updated import
 
 class PasswordScreen extends StatefulWidget {
   @override
@@ -28,9 +28,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
         await currentUser.updatePassword(passwordController.text);
 
         // Tambahkan data baru ke Firestore
-        DocumentReference userDoc = FirebaseFirestore.instance
-            .collection('user')
-            .doc(currentUser.uid);
+        DocumentReference userDoc =
+            FirebaseFirestore.instance.collection('user').doc(currentUser.uid);
         Map<String, dynamic> data = {
           'email': currentUser.email,
           'password': passwordController.text,
@@ -39,14 +38,16 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
         await FirebaseAuth.instance.signOut();
 
-        // Beralih ke halaman login setelah berhasil membuat password
+        // Beralih ke halaman username setelah berhasil membuat password
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(
+              builder: (context) => UsernameScreen()), // Updated navigation
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Password berhasil diperbarui! Silakan login.')),
+          SnackBar(
+              content: Text('Password berhasil diperbarui! Silakan login.')),
         );
       }
     } catch (e) {
@@ -60,16 +61,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: const Text('Buat Password'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -83,10 +75,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
               });
             }),
             const SizedBox(height: 16),
-            _buildPasswordField(
-                'Silakan masukkan konfirmasi password',
-                confirmPasswordController,
-                isConfirmPasswordVisible, (value) {
+            _buildPasswordField('Silakan masukkan konfirmasi password',
+                confirmPasswordController, isConfirmPasswordVisible, (value) {
               setState(() {
                 isConfirmPasswordVisible = !isConfirmPasswordVisible;
               });

@@ -121,14 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: Text(useEmail ? 'Pendaftaran Email' : 'Pendaftaran Seluler'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -150,6 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: toggleRegisterMethod,
                 child: Text(
                   useEmail ? 'Pendaftaran Seluler' : 'Pendaftaran Email',
+                  style: TextStyle(color: Colors.blue),
                 ),
               ),
             ),
