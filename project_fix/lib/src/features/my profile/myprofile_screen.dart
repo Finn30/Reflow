@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/features/my%20profile/authorization%20settings/authorizationsettings_screen.dart';
 import 'package:project_fix/src/features/my%20profile/change%20password/changepassword_screen.dart';
+import 'package:project_fix/src/features/my%20profile/delete%20account/deleteaccount_screen.dart';
 import 'package:project_fix/src/features/welcome%20screen/welcome_screen.dart';
 import 'first name/firstname_screen.dart';
 import 'last name/lastname_screen.dart';
@@ -163,6 +165,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               icon: Icons.security,
               text: 'Authorization Settings',
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AuthorizationSettingsScreen()),
+                );
                 // TODO: Implement authorization settings
               },
             ),
@@ -179,6 +186,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               icon: Icons.delete,
               text: 'Delete Account',
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DeleteAccountScreen()),
+                );
                 // TODO: Implement delete account
               },
               isDestructive: true,
