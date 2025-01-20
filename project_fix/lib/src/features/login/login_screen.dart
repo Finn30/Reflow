@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,11 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
         showError("Email atau Kata Sandi tidak boleh kosong.");
         return;
       }
-
-      // Mengacu ke koleksi pengguna di Firestore
       final usersCollection = FirebaseFirestore.instance.collection('user');
-
-      // Mencari email dalam database
       final querySnapshot =
           await usersCollection.where('email', isEqualTo: input).get();
 
@@ -42,18 +41,16 @@ class _LoginScreenState extends State<LoginScreen> {
         showError("Email tidak terdaftar. Silakan daftar terlebih dahulu.");
         return;
       }
-
-      // Mendapatkan dokumen pertama yang sesuai dengan email
       final userDoc = querySnapshot.docs.first;
       final userData = userDoc.data();
+      final hashedCurrPassword = sha256.convert(utf8.encode(password)).toString();
 
       // Memeriksa kecocokan password
-      if (userData['password'] == password) {
+      if (userData['password'] == hashedCurrPassword) {
         await _auth.signInWithEmailAndPassword(
           email: input,
           password: password,
         );
-        // Jika login berhasil
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),

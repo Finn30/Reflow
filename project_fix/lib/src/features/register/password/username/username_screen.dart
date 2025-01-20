@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_fix/src/features/login/login_screen.dart';
+import 'package:project_fix/src/function/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UsernameScreen extends StatefulWidget {
   @override
@@ -9,6 +11,8 @@ class UsernameScreen extends StatefulWidget {
 class _UsernameScreenState extends State<UsernameScreen> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
+  final FirestoreService fs = FirestoreService();
+  String email = FirebaseAuth.instance.currentUser!.email!;
 
   // Function to validate input fields
   bool validateFields() {
@@ -34,7 +38,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (!validateFields()) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -42,12 +46,22 @@ class _UsernameScreenState extends State<UsernameScreen> {
                               Text('First name and last name cannot be empty')),
                     );
                     return;
+                  } else{
+                    try {
+                      await fs.updateFirstname(email, firstNameController.text);
+                      await fs.updateLastname(email, lastNameController.text);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginScreen(),
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to register: $e')),
+                      );
+                    }
                   }
-                  // Navigate to the PasswordScreen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,

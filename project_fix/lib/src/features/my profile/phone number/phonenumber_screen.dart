@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/function/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
+
 
 class PhoneNumberScreen extends StatefulWidget {
   const PhoneNumberScreen({super.key});
@@ -10,6 +14,8 @@ class PhoneNumberScreen extends StatefulWidget {
 class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   final _formKey = GlobalKey<FormState>();
   final _phoneNumberController = TextEditingController();
+  final FirestoreService fs = FirestoreService();
+  String email = FirebaseAuth.instance.currentUser!.email!;
 
   @override
   void dispose() {
@@ -28,9 +34,14 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
               'Save',
               style: TextStyle(fontSize: 16, color: Colors.blue),
             ),
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                Navigator.pop(context, _phoneNumberController.text);
+                try{
+                  await fs.updatePhone(email, _phoneNumberController.text);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyProfileScreen()));
+                } catch (e) {
+                  print("Error updating user data: $e");
+                }
               }
             },
           ),

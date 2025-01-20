@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project_fix/src/features/register/password/username/username_screen.dart'; // Updated import
+import 'package:project_fix/src/features/register/password/username/username_screen.dart';
+import 'package:project_fix/src/function/services.dart';
 
 class PasswordScreen extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
   TextEditingController confirmPasswordController = TextEditingController();
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
+  final FirestoreService fs = FirestoreService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Fungsi untuk validasi password
   bool validatePassword(String password) {
@@ -20,42 +23,44 @@ class _PasswordScreenState extends State<PasswordScreen> {
     return regex.hasMatch(password);
   }
 
-  Future<void> updatePassword() async {
-    try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null) {
-        // Update password pengguna
-        await currentUser.updatePassword(passwordController.text);
+  // Future<void> updatePassword() async {
+  //   try {
+  //     final currentUser = FirebaseAuth.instance.currentUser;
+  //     if (currentUser != null) {
+  //       // Update password pengguna
+  //       await currentUser.updatePassword(passwordController.text);
 
-        // Tambahkan data baru ke Firestore
-        DocumentReference userDoc =
-            FirebaseFirestore.instance.collection('user').doc(currentUser.uid);
-        Map<String, dynamic> data = {
-          'email': currentUser.email,
-          'password': passwordController.text,
-        };
-        await userDoc.set(data);
+  //       // Tambahkan data baru ke Firestore
+  //       DocumentReference userDoc =
+  //           FirebaseFirestore.instance.collection('user').doc(currentUser.uid);
+  //       Map<String, dynamic> data = {
+  //         'email': currentUser.email,
+  //         'password': passwordController.text,
+  //       };
+  //       await userDoc.set(data);
 
-        await FirebaseAuth.instance.signOut();
+  //       await FirebaseAuth.instance.signOut();
 
-        // Beralih ke halaman username setelah berhasil membuat password
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UsernameScreen()), // Updated navigation
-        );
+  //       // Beralih ke halaman username setelah berhasil membuat password
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) => UsernameScreen()), // Updated navigation
+  //       );
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Password berhasil diperbarui! Silakan login.')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal memperbarui password: $e')),
-      );
-    }
-  }
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //             content: Text('Password berhasil diperbarui! Silakan login.')),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Gagal memperbarui password: $e')),
+  //     );
+  //   }
+  // }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +90,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   final password = passwordController.text;
                   final confirmPassword = confirmPasswordController.text;
 
@@ -111,8 +116,22 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     );
                     return;
                   }
-
-                  updatePassword();
+                  final currentUser = FirebaseAuth.instance.currentUser;
+                  if (currentUser != null) {
+                    await currentUser.updatePassword(password);
+                    await fs.addUsertoFirestore(confirmPassword);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UsernameScreen()), // Updated navigation
+                    );
+                  }else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Gagal memperbarui password')),
+                    );
+                    return;
+                  }
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,

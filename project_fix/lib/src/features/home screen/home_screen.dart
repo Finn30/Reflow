@@ -12,34 +12,13 @@ import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
 import 'package:project_fix/src/features/my%20trip/mytrip_screen.dart';
 import 'package:project_fix/src/features/my%20wallet/mywallet_screen.dart';
 import 'package:project_fix/src/features/user%20manual/usermanual_screen.dart';
+import 'package:project_fix/src/function/services.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirestoreService fs = FirestoreService();
 
-  // Fungsi untuk mengambil data pengguna dari Firebase Firestore
-  Future<Map<String, dynamic>> loadUser() async {
-    try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null) {
-        // Mengambil data pengguna dari Firestore berdasarkan UID
-        DocumentSnapshot userDocSnapshot = await FirebaseFirestore.instance
-            .collection('user')
-            .doc(currentUser.uid)
-            .get();
-
-        if (userDocSnapshot.exists) {
-          return userDocSnapshot.data() as Map<String, dynamic>;
-        } else {
-          throw Exception('User data not found in Firestore');
-        }
-      } else {
-        throw Exception('User is not signed in!');
-      }
-    } catch (e) {
-      print('Failed to load user data: $e');
-      return {};
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,26 +27,8 @@ class HomeScreen extends StatelessWidget {
         title: Text('Gridwiz'),
       ),
       drawer: FutureBuilder<Map<String, dynamic>>(
-        future: loadUser(),
+        future: fs.loadUser(auth.currentUser!.email!),
         builder: (context, snapshot) {
-          // Menangani loading state
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Drawer(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-
-          // Menangani error atau tidak ada data
-          if (snapshot.hasError ||
-              !snapshot.hasData ||
-              snapshot.data!.isEmpty) {
-            return Drawer(
-              child: Center(child: Text('Error loading user data')),
-            );
-          }
-
-          // Data pengguna yang telah berhasil dimuat
-          Map<String, dynamic> userData = snapshot.data!;
 
           return Drawer(
             child: Column(
@@ -93,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 16.0),
                             Text(
-                              '${userData['firstName']} ${userData['lastName']}', // Menampilkan nama depan dan belakang
+                              '${fs.user?.firstName} ${fs.user?.lastName}', // Menampilkan nama depan dan belakang
                               style: TextStyle(
                                 fontSize: 20.0,
                                 color: Colors.black,

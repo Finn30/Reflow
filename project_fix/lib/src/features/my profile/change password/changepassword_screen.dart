@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/function/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -15,6 +18,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _isCurrentPasswordVisible = false;
   bool _isNewPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  final FirestoreService fs = FirestoreService();
+  String email = FirebaseAuth.instance.currentUser!.email!;
 
   @override
   void dispose() {
@@ -82,13 +87,21 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async{
                     if (_formKey.currentState!.validate()) {
-                      // Handle password change logic here
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Password changed successfully')),
-                      );
+                      try {
+                        await fs.updatePassword(
+                          email, _currentPasswordController.text, _newPasswordController.text,
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyProfileScreen(),
+                          ),
+                        );
+                      } catch (e) {
+                        print('Error updating user data: $e');
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

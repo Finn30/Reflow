@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/function/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
 
 class GenderScreen extends StatefulWidget {
   const GenderScreen({super.key});
@@ -9,6 +12,8 @@ class GenderScreen extends StatefulWidget {
 
 class _GenderScreenState extends State<GenderScreen> {
   String? _selectedGender;
+  final FirestoreService fs = FirestoreService();
+  String email = FirebaseAuth.instance.currentUser!.email!;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +26,17 @@ class _GenderScreenState extends State<GenderScreen> {
               'Save',
               style: TextStyle(fontSize: 16, color: Colors.blue),
             ),
-            onPressed: () {
+            onPressed: () async {
               if (_selectedGender != null) {
-                Navigator.pop(context, _selectedGender);
+                try {
+                  await fs.updateGender(email, _selectedGender!);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyProfileScreen()));
+                } catch (e) {
+                  print("Error updating user data: $e");
+                }
               }
             },
           ),

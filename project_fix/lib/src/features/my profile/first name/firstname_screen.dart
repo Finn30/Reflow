@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/function/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
 
 class FirstNameScreen extends StatefulWidget {
   const FirstNameScreen({super.key});
@@ -10,6 +13,9 @@ class FirstNameScreen extends StatefulWidget {
 class _FirstNameScreenState extends State<FirstNameScreen> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
+  final FirestoreService fs = FirestoreService();
+  String email = FirebaseAuth.instance.currentUser!.email!;
+
 
   @override
   void dispose() {
@@ -28,9 +34,14 @@ class _FirstNameScreenState extends State<FirstNameScreen> {
               'Save',
               style: TextStyle(fontSize: 16, color: Colors.blue),
             ),
-            onPressed: () {
+            onPressed: () async{
               if (_formKey.currentState!.validate()) {
-                Navigator.pop(context, _firstNameController.text);
+                try{
+                  await fs.updateFirstname(email, _firstNameController.text);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyProfileScreen()));
+                } catch (e) {
+                  print("Error updating user data: $e");
+                }
               }
             },
           ),

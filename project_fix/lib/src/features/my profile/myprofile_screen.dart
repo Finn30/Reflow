@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_fix/src/features/my%20profile/authorization%20settings/authorizationsettings_screen.dart';
 import 'package:project_fix/src/features/my%20profile/change%20password/changepassword_screen.dart';
@@ -9,9 +10,10 @@ import 'last name/lastname_screen.dart';
 import 'gender/gender_screen.dart';
 import 'phone number/phonenumber_screen.dart';
 import 'email/email_screen.dart';
+import 'package:project_fix/src/function/services.dart';
 
 class MyProfileScreen extends StatefulWidget {
-  const MyProfileScreen({super.key});
+  MyProfileScreen({super.key});
 
   @override
   State<MyProfileScreen> createState() => _MyProfileScreenState();
@@ -19,6 +21,7 @@ class MyProfileScreen extends StatefulWidget {
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
   File? _profileImage;
+  FirestoreService fs = FirestoreService();
 
   Future<void> _changeProfileImage() async {
     showModalBottomSheet(
@@ -32,7 +35,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               title: const Text('Lihat Foto'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Implement view photo
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -52,7 +54,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             title: const Text('Ganti Foto'),
             onTap: () {
               Navigator.pop(context);
-              // TODO: Implement change photo
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -97,106 +98,118 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         title: const Text('My Profile'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Profile Picture Section
-            GestureDetector(
-              onTap: _changeProfileImage,
-              child: Stack(
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: fs.loadUser(FirebaseAuth.instance.currentUser!.email!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData) {
+            return const Center(child: Text('Data tidak ditemukan.'));
+          } else {
+            var userData = snapshot.data!;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : const AssetImage('assets/img/gridwiz_logo.jpg')
-                            as ImageProvider,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+                  // Profile Picture Section
+                  GestureDetector(
+                    onTap: _changeProfileImage,
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _profileImage != null
+                              ? FileImage(_profileImage!)
+                              : const AssetImage('assets/img/gridwiz_logo.jpg')
+                                  as ImageProvider,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextButton(
+                    onPressed: _changeProfileImage,
+                    child: const Text('Ganti Gambar'),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Personal Information Section
+                  _buildInfoField('First Name', '${userData['firstName']}'),
+                  _buildInfoField('Last Name', '${userData['lastName']}'),
+                  _buildInfoField('Gender', '${userData['gender']}'),
+                  _buildInfoField('Phone Number', '${userData['phone']}'),
+                  _buildInfoField('Email', '${userData['email']}'),
+
+                  const SizedBox(height: 30),
+
+                  // Account Management Section
+                  _buildActionButton(
+                    icon: Icons.lock,
+                    text: 'Change Password',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChangePasswordScreen()),
+                      );
+                    },
+                  ),
+                  _buildActionButton(
+                    icon: Icons.security,
+                    text: 'Authorization Settings',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AuthorizationSettingsScreen()),
+                      );
+                    },
+                  ),
+                  _buildActionButton(
+                    icon: Icons.logout,
+                    text: 'Sign Out',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                      );
+                    },
+                  ),
+                  _buildActionButton(
+                    icon: Icons.delete,
+                    text: 'Delete Account',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DeleteAccountScreen()),
+                      );
+                    },
+                    isDestructive: true,
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: _changeProfileImage,
-              child: const Text('Ganti Gambar'),
-            ),
-            const SizedBox(height: 20),
-
-            // Personal Information Section
-            _buildInfoField('First Name', 'John'),
-            _buildInfoField('Last Name', 'Doe'),
-            _buildInfoField('Gender', 'Male'),
-            _buildInfoField('Phone Number', '+62 812 3456 7890'),
-            _buildInfoField('Email', 'john.doe@example.com'),
-
-            const SizedBox(height: 30),
-
-            // Account Management Section
-            _buildActionButton(
-              icon: Icons.lock,
-              text: 'Change Password',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChangePasswordScreen()),
-                );
-                // TODO: Implement change password
-              },
-            ),
-            _buildActionButton(
-              icon: Icons.security,
-              text: 'Authorization Settings',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AuthorizationSettingsScreen()),
-                );
-                // TODO: Implement authorization settings
-              },
-            ),
-            _buildActionButton(
-              icon: Icons.logout,
-              text: 'Sign Out',
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                // TODO: Implement sign out
-              },
-            ),
-            _buildActionButton(
-              icon: Icons.delete,
-              text: 'Delete Account',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DeleteAccountScreen()),
-                );
-                // TODO: Implement delete account
-              },
-              isDestructive: true,
-            ),
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }
