@@ -12,12 +12,12 @@ class FirestoreService {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
 
-      final hashPass = sha256.convert(utf8.encode(currentUser!.email!)).toString();
+      final hashPass = sha256.convert(utf8.encode(password)).toString();
 
       DocumentReference userDoc =
-            _firestore.collection('user').doc(currentUser.uid);
+            _firestore.collection('user').doc(currentUser?.uid);
         Map<String, dynamic> data = {
-          'email': currentUser.email,
+          'email': currentUser?.email,
           'password': hashPass,
           'firstName': '',
           'lastName': '',
@@ -68,10 +68,15 @@ class FirestoreService {
     }
   }
 
-  Future<Map<String, dynamic>> loadUser(String email) async {
-    user = await FirestoreService().getUserByEmail(email);
-    return user!.toMap();
+  Future<Map<String, dynamic>?> loadUser(String email) async {
+    final user = await FirestoreService().getUserByEmail(email);
+    if (user == null) {
+      print("User tidak ditemukan untuk email: $email");
+      return null;
+    }
+    return user.toMap();
   }
+
 
   updateFirstname(String email, String newName) async {
     try {
@@ -174,6 +179,14 @@ class FirestoreService {
       }
     } catch (e) {
       print("Error updating user data: $e");
+    }
+  }
+
+  signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print("Error signing out: $e");
     }
   }
 }

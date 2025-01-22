@@ -99,7 +99,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fs.loadUser(FirebaseAuth.instance.currentUser!.email!),
+        future: fs.loadUser(FirebaseAuth.instance.currentUser!.email!).then((value) => value ?? {}),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -187,9 +187,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     icon: Icons.logout,
                     text: 'Sign Out',
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                        showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Sign Out'),
+                          content: const Text('Are you sure you want to sign out?'),
+                          actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                            Navigator.pop(context);
+                            fs.signOut();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                            );
+                            },
+                            child: const Text('Sign Out'),
+                          ),
+                          ],
+                        ),
                       );
                     },
                   ),

@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:project_fix/src/constant/image_string.dart';
+import 'package:project_fix/src/function/services.dart';
 import 'package:project_fix/src/features/about%20us/aboutus_screen.dart';
 import 'package:project_fix/src/features/car%20guide/carguide_screen.dart';
 import 'package:project_fix/src/features/feedback/feedback_screen.dart';
@@ -12,22 +13,97 @@ import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
 import 'package:project_fix/src/features/my%20trip/mytrip_screen.dart';
 import 'package:project_fix/src/features/my%20wallet/mywallet_screen.dart';
 import 'package:project_fix/src/features/user%20manual/usermanual_screen.dart';
-import 'package:project_fix/src/function/services.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final FirestoreService fs = FirestoreService();
-
 
   @override
-  Widget build(BuildContext context) {
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirestoreService fs = FirestoreService();
+  String email = '';
+
+  final LatLng initialPosition =
+      const LatLng(-8.586705728515044, 116.09220835292544); // Default location
+  late GoogleMapController mapController;
+
+  LatLng currentPosition =
+      const LatLng(-8.586705728515044, 116.09220835292544); // Default
+  bool isLocationEnabled = false;
+  Set<Marker> markers = {};
+
+  @override
+  void initState() {
+    _getUserLocation();
+    super.initState();
+    email = auth.currentUser!.email!;
+  }
+
+  Future<void> _getUserLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        setState(() {
+          isLocationEnabled = false;
+          currentPosition = initialPosition; // Use default location
+          _addMarker(currentPosition, "Your Location");
+        });
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          setState(() {
+            isLocationEnabled = false;
+            currentPosition = initialPosition; // Use default location
+            _addMarker(currentPosition, "Your Location");
+          });
+          return;
+        }
+      }
+
+      // Get current location
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        isLocationEnabled = true;
+        currentPosition = LatLng(position.latitude, position.longitude);
+        _addMarker(currentPosition, "Your Location");
+      });
+    } catch (e) {
+      print('Error: $e');
+      setState(() {
+        isLocationEnabled = false;
+        currentPosition = initialPosition; // Use default location
+        _addMarker(currentPosition, "Your Location");
+      });
+    }
+  }
+
+  void _addMarker(LatLng position, String title) {
+    setState(() {
+      markers.add(Marker(
+        markerId: MarkerId(title),
+        position: position,
+        infoWindow: InfoWindow(title: title),
+      ));
+    });
+  }
+
+Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Gridwiz'),
       ),
       drawer: FutureBuilder<Map<String, dynamic>>(
-        future: fs.loadUser(auth.currentUser!.email!),
+        future: fs.loadUser(email).then((value) => value ?? {}),
         builder: (context, snapshot) {
 
           return Drawer(
@@ -195,16 +271,25 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
-      body: Center(
-        child: Text('Home Screen'),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: currentPosition,
+          zoom: 28,
+        ),
+        markers: markers,
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
+        onMapCreated: (GoogleMapController controller) {
+          mapController = controller;
+        },
+        onTap: (LatLng tappedPoint) {
+          setState(() {
+            // Remove old marker "Tujuan Anda" and add new one
+            markers.removeWhere((marker) => marker.markerId.value == "Tujuan Anda");
+            _addMarker(tappedPoint, "Tujuan Anda");
+          });
+        },
       ),
-      // GoogleMap(
-      //   initialCameraPosition: CameraPosition(
-      //     target:
-      //         LatLng(-6.200000, 106.816666), // Example coordinates (Jakarta)
-      //     zoom: 10,
-      //   ),
-      // ),
     );
   }
 }

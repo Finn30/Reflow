@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_fix/src/features/register/password/username/username_screen.dart';
@@ -15,52 +14,13 @@ class _PasswordScreenState extends State<PasswordScreen> {
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
   final FirestoreService fs = FirestoreService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   // Fungsi untuk validasi password
   bool validatePassword(String password) {
     final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
     return regex.hasMatch(password);
   }
-
-  // Future<void> updatePassword() async {
-  //   try {
-  //     final currentUser = FirebaseAuth.instance.currentUser;
-  //     if (currentUser != null) {
-  //       // Update password pengguna
-  //       await currentUser.updatePassword(passwordController.text);
-
-  //       // Tambahkan data baru ke Firestore
-  //       DocumentReference userDoc =
-  //           FirebaseFirestore.instance.collection('user').doc(currentUser.uid);
-  //       Map<String, dynamic> data = {
-  //         'email': currentUser.email,
-  //         'password': passwordController.text,
-  //       };
-  //       await userDoc.set(data);
-
-  //       await FirebaseAuth.instance.signOut();
-
-  //       // Beralih ke halaman username setelah berhasil membuat password
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(
-  //             builder: (context) => UsernameScreen()), // Updated navigation
-  //       );
-
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //             content: Text('Password berhasil diperbarui! Silakan login.')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Gagal memperbarui password: $e')),
-  //     );
-  //   }
-  // }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -116,9 +76,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     );
                     return;
                   }
-                  final currentUser = FirebaseAuth.instance.currentUser;
                   if (currentUser != null) {
-                    await currentUser.updatePassword(password);
+                    await currentUser?.updatePassword(password);
                     await fs.addUsertoFirestore(confirmPassword);
                     Navigator.pushReplacement(
                       context,
