@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:project_fix/src/constant/image_string.dart';
+import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/qrcodescanner_screen.dart';
 import 'package:project_fix/src/function/services.dart';
-import 'package:project_fix/src/features/about%20us/aboutus_screen.dart';
-import 'package:project_fix/src/features/car%20guide/carguide_screen.dart';
+import 'package:project_fix/src/features/about us/aboutus_screen.dart';
+import 'package:project_fix/src/features/car guide/carguide_screen.dart';
 import 'package:project_fix/src/features/feedback/feedback_screen.dart';
-import 'package:project_fix/src/features/invite%20friends/invitefriends_screen.dart';
-import 'package:project_fix/src/features/language%20switch/languageswitch_screen.dart';
-import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
-import 'package:project_fix/src/features/my%20trip/mytrip_screen.dart';
-import 'package:project_fix/src/features/my%20wallet/mywallet_screen.dart';
-import 'package:project_fix/src/features/user%20manual/usermanual_screen.dart';
+import 'package:project_fix/src/features/invite friends/invitefriends_screen.dart';
+import 'package:project_fix/src/features/language switch/languageswitch_screen.dart';
+import 'package:project_fix/src/features/my profile/myprofile_screen.dart';
+import 'package:project_fix/src/features/my trip/mytrip_screen.dart';
+import 'package:project_fix/src/features/my wallet/mywallet_screen.dart';
+import 'package:project_fix/src/features/user manual/usermanual_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -97,15 +98,29 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-Widget build(BuildContext context) {
+  void _scanQRCode() {
+    // Implement QR code scanning functionality here
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications),
+            color: Colors.black,
+            onPressed: () {
+              _getUserLocation();
+            },
+          ),
+        ],
         title: Text('Gridwiz'),
+        centerTitle: true,
       ),
       drawer: FutureBuilder<Map<String, dynamic>>(
         future: fs.loadUser(email).then((value) => value ?? {}),
         builder: (context, snapshot) {
-
           return Drawer(
             child: Column(
               children: [
@@ -271,24 +286,92 @@ Widget build(BuildContext context) {
           );
         },
       ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: currentPosition,
-          zoom: 28,
-        ),
-        markers: markers,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        onMapCreated: (GoogleMapController controller) {
-          mapController = controller;
-        },
-        onTap: (LatLng tappedPoint) {
-          setState(() {
-            // Remove old marker "Tujuan Anda" and add new one
-            markers.removeWhere((marker) => marker.markerId.value == "Tujuan Anda");
-            _addMarker(tappedPoint, "Tujuan Anda");
-          });
-        },
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: currentPosition,
+              zoom: 28,
+            ),
+            markers: markers,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            onMapCreated: (GoogleMapController controller) {
+              mapController = controller;
+            },
+            onTap: (LatLng tappedPoint) {
+              setState(() {
+                // Remove old marker "Tujuan Anda" and add new one
+                markers.removeWhere(
+                    (marker) => marker.markerId.value == "Tujuan Anda");
+                _addMarker(tappedPoint, "Tujuan Anda");
+              });
+            },
+          ),
+          Positioned(
+            bottom: 16,
+            left: 100,
+            right: 100,
+            child: GestureDetector(
+              onTap: () async {
+                final qrCodeResult = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QRCodeScannerScreen()),
+                );
+
+                if (qrCodeResult != null) {
+                  // Tampilkan hasil QR code
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('QR Code: $qrCodeResult')),
+                  );
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue, // Warna tombol
+                  borderRadius: BorderRadius.circular(30), // Sudut melengkung
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2), // Warna bayangan
+                      blurRadius: 6,
+                      offset: Offset(0, 3), // Arah bayangan
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.qr_code_scanner, // Ikon QR code
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 12), // Jarak antara ikon dan teks
+                    Column(
+                      children: [
+                        Text(
+                          'Scan QR code', // Teks tombol
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          'to ride', // Teks tombol
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
