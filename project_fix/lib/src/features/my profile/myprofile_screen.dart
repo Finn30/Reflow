@@ -90,6 +90,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       ),
     );
   }
+  String email = FirebaseAuth.instance.currentUser!.email!;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fs.loadUser(FirebaseAuth.instance.currentUser!.email!).then((value) => value ?? {}),
+        future: fs.loadUser(email).then((value) => value ?? {}),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

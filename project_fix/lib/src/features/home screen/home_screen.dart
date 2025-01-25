@@ -105,7 +105,26 @@ Widget build(BuildContext context) {
       drawer: FutureBuilder<Map<String, dynamic>>(
         future: fs.loadUser(email).then((value) => value ?? {}),
         builder: (context, snapshot) {
-
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Drawer(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }else if (snapshot.hasError) {
+            return Drawer(
+              child: Center(
+                child: Text('Error loading user data'),
+              ),
+            );
+          }else if (!snapshot.hasData) {
+            return Drawer(
+              child: Center(
+                child: Text('User not found'),
+              ),
+            );
+          }else{
+            var userData = snapshot.data!;
           return Drawer(
             child: Column(
               children: [
@@ -130,7 +149,7 @@ Widget build(BuildContext context) {
                             ),
                             SizedBox(width: 16.0),
                             Text(
-                              '${fs.user?.firstName} ${fs.user?.lastName}', // Menampilkan nama depan dan belakang
+                              '${userData['firstName']??null}  ${userData['lastName']??null}',
                               style: TextStyle(
                                 fontSize: 20.0,
                                 color: Colors.black,
@@ -269,12 +288,13 @@ Widget build(BuildContext context) {
               ],
             ),
           );
+          }
         },
       ),
       body: GoogleMap(
         initialCameraPosition: CameraPosition(
           target: currentPosition,
-          zoom: 28,
+          zoom: 20,
         ),
         markers: markers,
         myLocationEnabled: true,

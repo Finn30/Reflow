@@ -40,7 +40,7 @@ dependencies:
   get: ^4.3.8
   cloud_firestore: ^5.6.0
   crypto: ^3.0.0
-  geolocator: ^7.6.2
+  geolocator: ^9.0.0
 
 dev_dependencies:
   flutter_test:
