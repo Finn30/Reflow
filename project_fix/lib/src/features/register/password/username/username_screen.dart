@@ -14,6 +14,14 @@ class _UsernameScreenState extends State<UsernameScreen> {
   final FirestoreService fs = FirestoreService();
   String email = FirebaseAuth.instance.currentUser!.email!;
 
+  // New variable for gender selection
+  String selectedGender = 'Male'; // Default value for gender selection
+  final List<String> genderOptions = [
+    'Male',
+    'Female',
+    'Other'
+  ]; // Gender options
+
   // Function to validate input fields
   bool validateFields() {
     return firstNameController.text.isNotEmpty &&
@@ -29,11 +37,49 @@ class _UsernameScreenState extends State<UsernameScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start, // Align to start
           children: [
             _buildTextField('Input First Name', firstNameController),
             const SizedBox(height: 16),
             _buildTextField('Input Last Name', lastNameController),
+            const SizedBox(height: 24),
+            // Gender Section
+            Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // Align label and dropdown
+              children: [
+                Text(
+                  'Select Gender',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                // Gender Dropdown
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: DropdownButton<String>(
+                    value: selectedGender,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedGender = newValue!;
+                      });
+                    },
+                    items: genderOptions
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    isExpanded: true,
+                    underline: SizedBox(), // Remove underline
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -46,10 +92,11 @@ class _UsernameScreenState extends State<UsernameScreen> {
                               Text('First name and last name cannot be empty')),
                     );
                     return;
-                  } else{
+                  } else {
                     try {
                       await fs.updateFirstname(email, firstNameController.text);
                       await fs.updateLastname(email, lastNameController.text);
+                      // Here you can also save the selected gender if needed
                       Navigator.push(
                         context,
                         MaterialPageRoute(
