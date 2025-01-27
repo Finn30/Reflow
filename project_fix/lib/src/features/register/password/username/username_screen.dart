@@ -41,6 +41,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
           children: [
             _buildTextField('Input First Name', firstNameController),
             const SizedBox(height: 16),
+
             _buildTextField('Input Last Name', lastNameController),
             const SizedBox(height: 24),
             // Gender Section
@@ -96,6 +97,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                     try {
                       await fs.updateFirstname(email, firstNameController.text);
                       await fs.updateLastname(email, lastNameController.text);
+                      await fs.updateGender(email, selectedGender);
                       // Here you can also save the selected gender if needed
                       Navigator.push(
                         context,
