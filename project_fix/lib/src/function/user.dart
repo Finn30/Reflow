@@ -1,4 +1,4 @@
-class Users{
+class Users {
   String? firstName;
   String? lastName;
   String? email;
@@ -16,7 +16,7 @@ class Users{
     this.phone,
     this.gender,
     this.createdAt,
-    this.pictUrl
+    this.pictUrl,
   });
 
   Users.fromMap(Map<String, dynamic> data) {
@@ -39,8 +39,7 @@ class Users{
       'phone': phone,
       'gender': gender,
       'createdAt': createdAt,
-      'pictUrl': pictUrl
+      'pictUrl': pictUrl,
     };
   }
-
 }

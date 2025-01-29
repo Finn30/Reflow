@@ -11,6 +11,7 @@ import 'gender/gender_screen.dart';
 import 'phone number/phonenumber_screen.dart';
 import 'email/email_screen.dart';
 import 'package:project_fix/src/function/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyProfileScreen extends StatefulWidget {
   MyProfileScreen({super.key});
@@ -22,73 +23,40 @@ class MyProfileScreen extends StatefulWidget {
 class _MyProfileScreenState extends State<MyProfileScreen> {
   File? _profileImage;
   FirestoreService fs = FirestoreService();
+  String email = FirebaseAuth.instance.currentUser!.email!;
 
   Future<void> _changeProfileImage() async {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_profileImage != null)
-            ListTile(
-              leading: const Icon(Icons.visibility),
-              title: const Text('Lihat Foto'),
-              onTap: () {
-                Navigator.pop(context);
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    content: Image.file(_profileImage!),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Tutup'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ListTile(
-            leading: const Icon(Icons.camera_alt),
-            title: const Text('Ganti Foto'),
-            onTap: () {
-              Navigator.pop(context);
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Ganti Foto'),
-                  content: const Text('Fitur ini akan segera hadir!'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          _profileImage = File(pickedFile.path); // Memperbarui gambar profil
+          try {
+            String fileName = pickedFile.path;
+            fs.changeProfilPicture(email, fileName).then((value) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Gambar profil berhasil diperbarui.')),
               );
-            },
-          ),
-          if (_profileImage != null)
-            ListTile(
-              leading: const Icon(Icons.delete, color: Colors.red),
-              title:
-                  const Text('Hapus Foto', style: TextStyle(color: Colors.red)),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _profileImage = null;
-                });
-              },
-            ),
-          ListTile(
-            leading: const Icon(Icons.close),
-            title: const Text('Batal'),
-            onTap: () => Navigator.pop(context),
-          ),
-        ],
-      ),
-    );
+            });
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Terjadi kesalahan: $e')),
+            );
+          }
+        });
+      } else {
+        // Jika tidak ada gambar yang dipilih
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Tidak ada gambar yang dipilih.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    }
   }
 
   @override
@@ -99,7 +67,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fs.loadUser(FirebaseAuth.instance.currentUser!.email!).then((value) => value ?? {}),
+        future: fs.loadUser(email).then((value) => value ?? {}),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -122,8 +90,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           radius: 50,
                           backgroundImage: _profileImage != null
                               ? FileImage(_profileImage!)
-                              : const AssetImage('assets/img/gridwiz_logo.jpg')
-                                  as ImageProvider,
+                              : FileImage(File(userData['pictUrl'])),
                         ),
                         Positioned(
                           bottom: 0,
