@@ -23,3 +23,4 @@ plugins {
 }
 
 include ":app"
+include ":geolocator_android"  // Added geolocator_android module

@@ -5,12 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_fix/src/function/User.dart';
 
 class FirestoreService {
-  FirestoreService._privateConstructor();
-  static final FirestoreService _instance = FirestoreService._privateConstructor();
-  factory FirestoreService() {
-    return _instance;
-  }
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Users? user;
 
@@ -19,25 +13,43 @@ class FirestoreService {
       final currentUser = FirebaseAuth.instance.currentUser;
       final hashPass = sha256.convert(utf8.encode(password)).toString();
 
-      DocumentReference userDoc = _firestore.collection('user').doc(currentUser?.uid);
-      Map<String, dynamic> data = {
-        'email': currentUser?.email,
-        'password': hashPass,
-        'firstName': '',
-        'lastName': '',
-        'gender': '',
-        'phone': '',
-        'createdAt': DateTime.now().toString(),
-        'pictUrl': '',
-      };
-      await userDoc.set(data);
+      DocumentReference userDoc =
+            _firestore.collection('user').doc(currentUser?.uid);
+        Map<String, dynamic> data = {
+          'email': currentUser?.email,
+          'password': hashPass,
+          'firstName': '',
+          'lastName': '',
+          'gender': '',
+          'phone': '',
+          'createdAt': DateTime.now().toString(),
+          'pictUrl': '',
+        };
+        await userDoc.set(data);
     } catch (e) {
       print("Error adding user to Firestore: $e");
     }
   }
 
-  Future<Map<String, dynamic>?> loadUser(String email) async {
-    try{
+  Future<Users?> getUsersById(String UsersId) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> doc =
+          await _firestore.collection('Users').doc(UsersId).get();
+
+      if (doc.exists) {
+        return Users.fromMap(doc.data()!);
+      } else {
+        print("Users not found");
+        return null;
+      }
+    } catch (e) {
+      print("Error loading Users: $e");
+      return null;
+    }
+  }
+
+  Future<Users?> getUserByEmail(String email) async {
+    try {
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('user')
           .where('email', isEqualTo: email)
@@ -52,6 +64,15 @@ class FirestoreService {
       print("Error loading user: $e");
       return null;
     }
+  }
+
+  Future<Map<String, dynamic>?> loadUser(String email) async {
+    final user = await FirestoreService().getUserByEmail(email);
+    if (user == null) {
+      print("User tidak ditemukan untuk email: $email");
+      return null;
+    }
+    return user.toMap();
   }
 
 
@@ -85,21 +106,12 @@ class FirestoreService {
 
   updateEmail(String email, String newEmail) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final credential = EmailAuthProvider.credential(email: email, password: 'password'); // Ganti 'password' dengan input password aktual
-        await user.reauthenticateWithCredential(credential);
-        await user.updateEmail(newEmail);
-
-        QuerySnapshot<Map<String, dynamic>> query = await _firestore
-            .collection('user')
-            .where('email', isEqualTo: email)
-            .get();
-        for (var doc in query.docs) {
-          await doc.reference.update({'email': newEmail});
-        }
-      } else {
-        print("User tidak terautentikasi.");
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .get();
+      for (var doc in query.docs) {
+        await doc.reference.update({'email': newEmail});
       }
     } catch (e) {
       print("Error updating email: $e");
@@ -109,8 +121,10 @@ class FirestoreService {
   updatePassword(String email, String currPass, String newPassword) async {
     try {
       final auth = FirebaseAuth.instance;
-      final hashedCurrPassword = sha256.convert(utf8.encode(currPass)).toString();
-      final hashedNewPassword = sha256.convert(utf8.encode(newPassword)).toString();
+      final hashedCurrPassword =
+          sha256.convert(utf8.encode(currPass)).toString();
+      final hashedNewPassword =
+          sha256.convert(utf8.encode(newPassword)).toString();
 
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('user')
@@ -129,7 +143,8 @@ class FirestoreService {
       }
 
       final user = auth.currentUser;
-      final credential = EmailAuthProvider.credential(email: email, password: currPass);
+      final credential =
+          EmailAuthProvider.credential(email: email, password: currPass);
       await user?.reauthenticateWithCredential(credential);
       await user?.updatePassword(newPassword);
 
