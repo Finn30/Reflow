@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               SizedBox(width: 16.0),
                               Text(
-                                '${userData['firstName'] ?? null}  ${userData['lastName'] ?? null}',
+                                '${userData['firstName'] ?? null}${userData['lastName'] ?? null}',
                                 style: TextStyle(
                                   fontSize: 20.0,
                                   color: Colors.black,
@@ -313,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
           GoogleMap(
             initialCameraPosition: CameraPosition(
               target: currentPosition,
-              zoom: 28,
+              zoom: 14,
             ),
             markers: markers,
             myLocationEnabled: true,

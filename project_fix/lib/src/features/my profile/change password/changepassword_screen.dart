@@ -20,6 +20,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _isConfirmPasswordVisible = false;
   final FirestoreService fs = FirestoreService();
   String email = FirebaseAuth.instance.currentUser!.email!;
+  bool _isCurrentPasswordValid = true;
+  bool _isNewPasswordValid = true;
+  bool _isConfirmPasswordValid = true; // Tambahan untuk validasi warna border
 
   @override
   void dispose() {
@@ -27,6 +30,42 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  bool validatePassword(String password) {
+    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
+    return regex.hasMatch(password);
+  }
+
+  Future<void> _validateAndChangePassword() async {
+    bool isPasswordCorrect = await fs.checkPassword(email, _currentPasswordController.text);
+
+    if (!isPasswordCorrect) {
+      setState(() {
+        _isCurrentPasswordValid = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isCurrentPasswordValid = true;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      if(validatePassword(_newPasswordController.text)){
+        if (_newPasswordController.text == _confirmPasswordController.text) {
+          await fs.updatePassword(email, _confirmPasswordController.text);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyProfileScreen()),
+          );
+        } else {
+          _isConfirmPasswordValid = false;
+        }
+      } else {
+        _isNewPasswordValid = false;
+      }
+    }
   }
 
   @override
@@ -60,6 +99,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     _isCurrentPasswordVisible = value;
                   });
                 },
+                isValid: _isCurrentPasswordValid,
+                errorMessage: "Password tidak sesuai",
               ),
               const SizedBox(height: 16),
               _buildPasswordField(
@@ -71,6 +112,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     _isNewPasswordVisible = value;
                   });
                 },
+                isValid: _isNewPasswordValid,
+                errorMessage: "Password harus mengandung huruf besar, huruf kecil, dan angka",
               ),
               const SizedBox(height: 16),
               _buildPasswordField(
@@ -82,28 +125,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     _isConfirmPasswordVisible = value;
                   });
                 },
+                isValid: _isConfirmPasswordValid,
+                errorMessage: "Password tidak sesuai",
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () async{
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        await fs.updatePassword(
-                          email, _currentPasswordController.text, _newPasswordController.text,
-                        );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyProfileScreen(),
-                          ),
-                        );
-                      } catch (e) {
-                        print('Error updating user data: $e');
-                      }
-                    }
-                  },
+                  onPressed: _validateAndChangePassword,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
@@ -125,28 +154,47 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     String hintText,
     TextEditingController controller,
     bool isVisible,
-    Function(bool) toggleVisibility,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(30),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
-        controller: controller,
-        obscureText: !isVisible,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: InputBorder.none,
-          suffixIcon: IconButton(
-            icon: Icon(
-              isVisible ? Icons.visibility : Icons.visibility_off,
+    Function(bool) toggleVisibility, {
+    bool isValid = true,
+    String? errorMessage,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: isValid ? Colors.transparent : Colors.red, // Ubah warna border jika tidak valid
+              width: 2,
             ),
-            onPressed: () => toggleVisibility(!isVisible),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: TextField(
+            controller: controller,
+            obscureText: !isVisible,
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  isVisible ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: () => toggleVisibility(!isVisible),
+              ),
+            ),
           ),
         ),
-      ),
+        if (!isValid && errorMessage != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 5),
+            child: Text(
+              errorMessage,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -1,10 +1,20 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_fix/src/function/User.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 
 class FirestoreService {
+  FirestoreService._privateConstructor();
+  static final FirestoreService _instance = FirestoreService._privateConstructor();
+  factory FirestoreService() {
+    return _instance;
+  }
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Users? user;
 
@@ -13,43 +23,25 @@ class FirestoreService {
       final currentUser = FirebaseAuth.instance.currentUser;
       final hashPass = sha256.convert(utf8.encode(password)).toString();
 
-      DocumentReference userDoc =
-            _firestore.collection('user').doc(currentUser?.uid);
-        Map<String, dynamic> data = {
-          'email': currentUser?.email,
-          'password': hashPass,
-          'firstName': '',
-          'lastName': '',
-          'gender': '',
-          'phone': '',
-          'createdAt': DateTime.now().toString(),
-          'pictUrl': '',
-        };
-        await userDoc.set(data);
+      DocumentReference userDoc = _firestore.collection('user').doc(currentUser?.uid);
+      Map<String, dynamic> data = {
+        'email': currentUser?.email,
+        'password': hashPass,
+        'firstName': '',
+        'lastName': '',
+        'gender': '',
+        'phone': '',
+        'createdAt': DateTime.now().toString(),
+        'pictUrl': '',
+      };
+      await userDoc.set(data);
     } catch (e) {
       print("Error adding user to Firestore: $e");
     }
   }
 
-  Future<Users?> getUsersById(String UsersId) async {
-    try {
-      DocumentSnapshot<Map<String, dynamic>> doc =
-          await _firestore.collection('Users').doc(UsersId).get();
-
-      if (doc.exists) {
-        return Users.fromMap(doc.data()!);
-      } else {
-        print("Users not found");
-        return null;
-      }
-    } catch (e) {
-      print("Error loading Users: $e");
-      return null;
-    }
-  }
-
-  Future<Users?> getUserByEmail(String email) async {
-    try {
+  Future<Map<String, dynamic>?> loadUser(String email) async {
+    try{
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('user')
           .where('email', isEqualTo: email)
@@ -65,16 +57,6 @@ class FirestoreService {
       return null;
     }
   }
-
-  Future<Map<String, dynamic>?> loadUser(String email) async {
-    final user = await FirestoreService().getUserByEmail(email);
-    if (user == null) {
-      print("User tidak ditemukan untuk email: $email");
-      return null;
-    }
-    return user.toMap();
-  }
-
 
   updateFirstname(String email, String newName) async {
     try {
@@ -106,51 +88,43 @@ class FirestoreService {
 
   updateEmail(String email, String newEmail) async {
     try {
-      QuerySnapshot<Map<String, dynamic>> query = await _firestore
-          .collection('user')
-          .where('email', isEqualTo: email)
-          .get();
-      for (var doc in query.docs) {
-        await doc.reference.update({'email': newEmail});
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final credential = EmailAuthProvider.credential(email: email, password: 'password'); // Ganti 'password' dengan input password aktual
+        await user.reauthenticateWithCredential(credential);
+        await user.updateEmail(newEmail);
+
+        QuerySnapshot<Map<String, dynamic>> query = await _firestore
+            .collection('user')
+            .where('email', isEqualTo: email)
+            .get();
+        for (var doc in query.docs) {
+          await doc.reference.update({'email': newEmail});
+        }
+      } else {
+        print("User tidak terautentikasi.");
       }
     } catch (e) {
       print("Error updating email: $e");
     }
   }
 
-  updatePassword(String email, String currPass, String newPassword) async {
+  updatePassword(String email, String newPassword) async {
     try {
-      final auth = FirebaseAuth.instance;
-      final hashedCurrPassword =
-          sha256.convert(utf8.encode(currPass)).toString();
-      final hashedNewPassword =
-          sha256.convert(utf8.encode(newPassword)).toString();
-
-      QuerySnapshot<Map<String, dynamic>> query = await _firestore
-          .collection('user')
-          .where('email', isEqualTo: email)
-          .get();
-
-      if (query.docs.isEmpty) {
-        throw Exception("User not found in Firestore.");
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await user.updatePassword(newPassword);
+        final hashPass = sha256.convert(utf8.encode(newPassword)).toString();
+        QuerySnapshot<Map<String, dynamic>> query = await _firestore
+            .collection('user')
+            .where('email', isEqualTo: email)
+            .get();
+        for (var doc in query.docs) {
+          await doc.reference.update({'password': hashPass});
+        }
+      } else {
+        print("User tidak terautentikasi.");
       }
-
-      final userDoc = query.docs.first;
-      final storedPassword = userDoc.data()['password'];
-
-      if (storedPassword != hashedCurrPassword) {
-        throw Exception("Current password does not match.");
-      }
-
-      final user = auth.currentUser;
-      final credential =
-          EmailAuthProvider.credential(email: email, password: currPass);
-      await user?.reauthenticateWithCredential(credential);
-      await user?.updatePassword(newPassword);
-
-      await userDoc.reference.update({'password': hashedNewPassword});
-
-      print("Password updated successfully!");
     } catch (e) {
       print("Error updating password: $e");
     }
@@ -191,4 +165,44 @@ class FirestoreService {
       print("Error signing out: $e");
     }
   }
+  checkPassword(String email, String password) async {
+    try {
+      final hashPass = sha256.convert(utf8.encode(password)).toString();
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .get();
+      if (query.docs.isNotEmpty) {
+        final userDoc = query.docs.first;
+        final storedPassword = userDoc.data()['password'];
+        if (storedPassword == hashPass) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        print("User not found");
+        return false;
+      }
+    } catch (e) {
+      print("Error loading user: $e");
+      return false;
+    }
+  }
+
+
+  changeProfilPicture(String email, String url) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .get();
+      for (var doc in query.docs) {
+        await doc.reference.update({'pictUrl': url});
+      }
+    } catch (e) {
+      print("Error updating user data: $e");
+    }
+  }
 }
+
