@@ -14,6 +14,7 @@ import 'package:project_fix/src/features/my profile/myprofile_screen.dart';
 import 'package:project_fix/src/features/my trip/mytrip_screen.dart';
 import 'package:project_fix/src/features/my wallet/mywallet_screen.dart';
 import 'package:project_fix/src/features/user manual/usermanual_screen.dart';
+import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -160,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             children: [
                               CircleAvatar(
-                                backgroundImage: AssetImage(logo_gridwiz),
+                                backgroundImage: FileImage(File(userData['pictUrl'] ?? logo_gridwiz)),
                                 radius: 30.0,
                               ),
                               SizedBox(width: 16.0),

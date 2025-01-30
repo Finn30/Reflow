@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/features/home%20screen/home_screen.dart';
 import 'package:project_fix/src/features/my%20profile/authorization%20settings/authorizationsettings_screen.dart';
 import 'package:project_fix/src/features/my%20profile/change%20password/changepassword_screen.dart';
 import 'package:project_fix/src/features/my%20profile/delete%20account/deleteaccount_screen.dart';
@@ -24,8 +25,79 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   File? _profileImage;
   FirestoreService fs = FirestoreService();
   String email = FirebaseAuth.instance.currentUser!.email!;
-
   Future<void> _changeProfileImage() async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_profileImage != null)
+            ListTile(
+              leading: const Icon(Icons.visibility),
+              title: const Text('Lihat Foto'),
+              onTap: () {
+                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: Image.file(_profileImage!),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Tutup'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ListTile(
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('Ganti Foto'),
+            onTap: () {
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Ganti Foto'),
+                  actions: [
+                    TextButton(
+                      onPressed: changeProfileImage,
+                      child: const Text('Pilih dari Galeri'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          if (_profileImage != null)
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title:
+                  const Text('Hapus Foto', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _profileImage = null;
+                });
+              },
+            ),
+          ListTile(
+            leading: const Icon(Icons.close),
+            title: const Text('Batal'),
+            onTap: () => Navigator.pop(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Future<void> changeProfileImage() async {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -65,6 +137,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       appBar: AppBar(
         title: const Text('My Profile'),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
+        ),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fs.loadUser(email).then((value) => value ?? {}),
