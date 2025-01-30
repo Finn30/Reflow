@@ -79,6 +79,10 @@ flutter:
     - assets/img/gridwiz_logo.jpg
     - assets/img/gridwiz.jpg
     - assets/img/ngetes.jpg
+    - assets/img/visa.png
+    - assets/img/mastercard.png
+    - assets/img/american_express.png
+    - assets/img/discover.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

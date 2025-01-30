@@ -48,15 +48,15 @@ class MyWalletScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(width: 8.0),
-                        Text('0',
+                        Text('Rp',
                             style: TextStyle(
-                                fontSize: 40.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
                         SizedBox(width: 2.0),
-                        Text('IDR',
+                        Text('0',
                             style: TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 40.0,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
                       ],
@@ -66,7 +66,7 @@ class MyWalletScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(width: 8.0),
-                        Text('(including 0.00 IDR gift)',
+                        Text('(including Rp 0 gift)',
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.white)),
                       ],

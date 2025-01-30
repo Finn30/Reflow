@@ -65,7 +65,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content: Text(
-                              'Password harus minimal 6 karakter dengan kombinasi huruf besar, huruf kecil, dan angka.')),
+                              'Password harus minimal 6 karakter dengan kombinasi huruf besar, huruf kecil, dan angka tanpa symbol.')),
                     );
                     return;
                   }
@@ -82,15 +82,15 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => UsernameScreen()), // Updated navigation
+                          builder: (context) =>
+                              UsernameScreen()), // Updated navigation
                     );
-                  }else{
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Gagal memperbarui password')),
                     );
                     return;
                   }
-                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,

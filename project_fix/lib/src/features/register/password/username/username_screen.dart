@@ -41,6 +41,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
           children: [
             _buildTextField('Input First Name', firstNameController),
             const SizedBox(height: 16),
+
             _buildTextField('Input Last Name', lastNameController),
             const SizedBox(height: 24),
             // Gender Section
