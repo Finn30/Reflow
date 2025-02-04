@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_fix/src/constant/image_string.dart';
+import 'package:project_fix/src/constant/text_string.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -29,7 +30,7 @@ class AboutUsScreen extends StatelessWidget {
                       width: 300,
                     ),
                     const Text(
-                      'Gridwiz',
+                      tAppName,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -60,7 +61,7 @@ class AboutUsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               const Text(
-                'Gridwiz Techonologies LTD.',
+                '$tAppName Techonologies LTD.',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
@@ -68,7 +69,7 @@ class AboutUsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Copyrigth © 2017-2024 Gridwiz All Rights Reserved',
+                'Copyrigth © 2017-2024 $tAppName All Rights Reserved',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey,

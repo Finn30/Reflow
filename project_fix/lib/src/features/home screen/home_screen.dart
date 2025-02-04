@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:project_fix/src/constant/image_string.dart';
+import 'package:project_fix/src/constant/text_string.dart';
 import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/qrcodescanner_screen.dart';
 import 'package:project_fix/src/function/services.dart';
 import 'package:project_fix/src/features/about us/aboutus_screen.dart';
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ],
-        title: Text('Gridwiz'),
+        title: Text(tAppName),
         centerTitle: true,
       ),
       drawer: FutureBuilder<Map<String, dynamic>>(
@@ -161,12 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             children: [
                               CircleAvatar(
-                                backgroundImage: FileImage(File(userData['pictUrl'] ?? logo_gridwiz)),
+                                backgroundImage: FileImage(
+                                    File(userData['pictUrl'] ?? logo_gridwiz)),
                                 radius: 30.0,
                               ),
                               SizedBox(width: 16.0),
                               Text(
-                                '${userData['firstName'] ?? null}${userData['lastName'] ?? null}',
+                                '${userData['firstName'] ?? null} ${userData['lastName'] ?? null}',
                                 style: TextStyle(
                                   fontSize: 20.0,
                                   color: Colors.black,
@@ -294,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 40),
                         SizedBox(width: 10),
                         Text(
-                          'Gridwiz',
+                          tAppName,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
