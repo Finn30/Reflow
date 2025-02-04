@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class QRCodeScannerScreen extends StatefulWidget {
   @override
@@ -11,6 +12,15 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   String result = "Scan a QR code";
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  final List<String> imgList = [
+    'assets/img/bicycle.png',
+    'assets/img/bicycle.png',
+    'assets/img/bicycle.png',
+    // Add more image paths as needed
+  ];
+
+  int _currentIndex = 0;
 
   @override
   void reassemble() {
@@ -81,21 +91,55 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
             child: Center(
               child: Column(
                 children: [
-                  // Tempat gambar di atas kotak scanner
-                  Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white.withOpacity(0.8),
+                  // Carousel for images
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: 150,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        'assets/img/gridwiz.jpg', // Ganti dengan path gambar Anda
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    items: imgList
+                        .map((item) => Container(
+                              width: 150,
+                              height: 150,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset(
+                                  item,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                  // Indicators
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: imgList.asMap().entries.map((entry) {
+                      return GestureDetector(
+                        onTap: () => setState(() {
+                          _currentIndex = entry.key;
+                        }),
+                        child: Container(
+                          width: 8.0,
+                          height: 8.0,
+                          margin: EdgeInsets.symmetric(horizontal: 4.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: (Theme.of(context).primaryColorLight)
+                                .withOpacity(
+                              _currentIndex == entry.key ? 0.9 : 0.4,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
@@ -161,23 +205,6 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
                     ),
                   ],
                 ),
-                // Column(
-                //   children: [
-                //     ElevatedButton(
-                //       onPressed: flipCamera,
-                //       child:
-                //           Icon(Icons.flip_camera_android, color: Colors.blue),
-                //       style: ElevatedButton.styleFrom(
-                //         shape: CircleBorder(),
-                //         padding: EdgeInsets.all(20),
-                //       ),
-                //     ),
-                //     Text(
-                //       'Flip Camera',
-                //       style: TextStyle(color: Colors.white, fontSize: 12),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),

@@ -46,6 +46,7 @@ dependencies:
   firebase_storage: ^12.4.1
   image_picker: ^1.1.2
   file_picker: ^8.2.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +84,7 @@ flutter:
     - assets/img/mastercard.png
     - assets/img/american_express.png
     - assets/img/discover.png
+    - assets/img/bicycle.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
