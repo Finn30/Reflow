@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/features/my%20wallet/recharge/midtrans%20payment/midtranspayment_screen.dart';
+import 'package:project_fix/src/function/services.dart';
 
 class RechargeScreen extends StatefulWidget {
   @override
@@ -8,6 +11,18 @@ class RechargeScreen extends StatefulWidget {
 class _RechargeScreenState extends State<RechargeScreen> {
   int selectedCardIndex = -1;
   bool isCheckboxChecked = false;
+  FirestoreService fs = FirestoreService();
+  String email = FirebaseAuth.instance.currentUser!.email!;
+  List<Map<String, String>> rechargeAmounts = [
+    {"amount": "1000", "gift": "Gift Rp0"},
+    {"amount": "5000", "gift": "Gift Rp0"},
+    {"amount": "10000", "gift": "Gift Rp0"},
+    {"amount": "15000", "gift": "Gift Rp0"},
+    {"amount": "20000", "gift": "Gift Rp0"},
+    {"amount": "30000", "gift": "Gift Rp0"},
+    {"amount": "50000", "gift": "Gift Rp1000"},
+    {"amount": "100000", "gift": "Gift Rp2000"},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +301,24 @@ class _RechargeScreenState extends State<RechargeScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: isTopUpEnabled ? () {} : null,
+                onPressed: isTopUpEnabled
+                    ? () {
+                        fs.createPaymentLinkMidtrans(email, 1).then((link) {
+                          if (link != null) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MidtransPaymentScreen(
+                                        paymentUrl: link)));
+                          } else {
+                            // Handle the case where link is null
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text('Failed to create payment link')));
+                          }
+                        });
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isTopUpEnabled ? Colors.blue : Colors.grey,
                   shape: RoundedRectangleBorder(

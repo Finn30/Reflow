@@ -7,10 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_fix/src/function/User.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FirestoreService {
   FirestoreService._privateConstructor();
-  static final FirestoreService _instance = FirestoreService._privateConstructor();
+  static final FirestoreService _instance =
+      FirestoreService._privateConstructor();
   factory FirestoreService() {
     return _instance;
   }
@@ -23,7 +27,8 @@ class FirestoreService {
       final currentUser = FirebaseAuth.instance.currentUser;
       final hashPass = sha256.convert(utf8.encode(password)).toString();
 
-      DocumentReference userDoc = _firestore.collection('user').doc(currentUser?.uid);
+      DocumentReference userDoc =
+          _firestore.collection('user').doc(currentUser?.uid);
       Map<String, dynamic> data = {
         'email': currentUser?.email,
         'password': hashPass,
@@ -41,7 +46,7 @@ class FirestoreService {
   }
 
   Future<Map<String, dynamic>?> loadUser(String email) async {
-    try{
+    try {
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('user')
           .where('email', isEqualTo: email)
@@ -90,7 +95,10 @@ class FirestoreService {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final credential = EmailAuthProvider.credential(email: email, password: 'password'); // Ganti 'password' dengan input password aktual
+        final credential = EmailAuthProvider.credential(
+            email: email,
+            password:
+                'password'); // Ganti 'password' dengan input password aktual
         await user.reauthenticateWithCredential(credential);
         await user.updateEmail(newEmail);
 
@@ -165,6 +173,7 @@ class FirestoreService {
       print("Error signing out: $e");
     }
   }
+
   checkPassword(String email, String password) async {
     try {
       final hashPass = sha256.convert(utf8.encode(password)).toString();
@@ -190,7 +199,6 @@ class FirestoreService {
     }
   }
 
-
   changeProfilPicture(String email, String url) async {
     try {
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
@@ -204,5 +212,41 @@ class FirestoreService {
       print("Error updating user data: $e");
     }
   }
-}
 
+  Future<String?> createPaymentLinkMidtrans(String email, int amount) async {
+    try {
+      final url = Uri.parse('https://app.midtrans.com/snap/v1/transactions');
+      final serverKey = dotenv.env['MIDTRANS_SERVER_KEY'] ?? 'Not Found';
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + base64Encode(utf8.encode(serverKey)),
+        },
+        body: jsonEncode({
+          'transaction_details': {
+            'order_id': 'order-${DateTime.now().millisecondsSinceEpoch}',
+            'gross_amount': amount,
+          },
+          'customer_details': {
+            'email': email,
+          }
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        final paymentUrl = responseData['redirect_url'];
+        print('Payment Link: $paymentUrl');
+        return paymentUrl;
+      } else {
+        print('Failed to create payment link: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print("Error in createPaymentLinkMidtrans: $e");
+      return null;
+    }
+  }
+}
