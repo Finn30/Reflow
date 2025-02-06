@@ -13,6 +13,8 @@ class _RechargeScreenState extends State<RechargeScreen> {
   bool isCheckboxChecked = false;
   FirestoreService fs = FirestoreService();
   String email = FirebaseAuth.instance.currentUser!.email!;
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  
   List<Map<String, String>> rechargeAmounts = [
     {"amount": "1000", "gift": "Gift Rp0"},
     {"amount": "5000", "gift": "Gift Rp0"},
@@ -23,6 +25,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
     {"amount": "50000", "gift": "Gift Rp1000"},
     {"amount": "100000", "gift": "Gift Rp2000"},
   ];
+  
 
   @override
   Widget build(BuildContext context) {
@@ -65,67 +68,80 @@ class _RechargeScreenState extends State<RechargeScreen> {
   }
 
   Widget _buildBalanceCard() {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Container(
-        padding: EdgeInsets.all(32.0),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(30.0),
-            bottomLeft: Radius.circular(8.0),
-            bottomRight: Radius.circular(8.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "0",
-                  style: TextStyle(
-                    fontSize: 28,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+    return FutureBuilder<int?>(
+      future: fs.getBalance(uid), // Panggil fungsi async
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator()); // Tampilkan loading
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text("Balance not available"));
+        }else{
+          return Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Container(
+              padding: EdgeInsets.all(32.0),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(30.0),
+                  bottomLeft: Radius.circular(8.0),
+                  bottomRight: Radius.circular(8.0),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
                   ),
-                ),
-                SizedBox(height: 18.0),
-                Text("Balance (Rp)",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                    )),
-              ],
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        snapshot.data.toString(), // Tampilkan nilai balance
+                        style: TextStyle(
+                          fontSize: 28,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 18.0),
+                      Text("Balance (Rp)",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          )),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Bonus Amount:\t\tRp0",
+                        style: TextStyle(fontSize: 14, color: Colors.white),
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        "Principal:\t\tRp0",
+                        style: TextStyle(fontSize: 14, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "Bonus Amount:\t\tRp0",
-                  style: TextStyle(fontSize: 14, color: Colors.white),
-                ),
-                SizedBox(height: 16.0),
-                Text(
-                  "Principal:\t\tRp0",
-                  style: TextStyle(fontSize: 14, color: Colors.white),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 
@@ -303,13 +319,13 @@ class _RechargeScreenState extends State<RechargeScreen> {
               child: ElevatedButton(
                 onPressed: isTopUpEnabled
                     ? () {
-                        fs.createPaymentLinkMidtrans(email, 1).then((link) {
+                        fs.createPaymentLinkMidtrans(email, int.parse(rechargeAmounts[selectedCardIndex]["amount"]!)).then((link) {
                           if (link != null) {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MidtransPaymentScreen(
-                                        paymentUrl: link)));
+                                        paymentUrl: link, amount: int.parse(rechargeAmounts[selectedCardIndex]["amount"]!))));
                           } else {
                             // Handle the case where link is null
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

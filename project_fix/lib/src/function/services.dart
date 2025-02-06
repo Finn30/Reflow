@@ -1,13 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_fix/src/function/User.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -215,9 +210,12 @@ class FirestoreService {
 
   Future<String?> createPaymentLinkMidtrans(String email, int amount) async {
     try {
-      final url = Uri.parse('https://app.midtrans.com/snap/v1/transactions');
-      final serverKey = dotenv.env['MIDTRANS_SERVER_KEY'] ?? 'Not Found';
-
+      var userData = await loadUser(email);
+      //production url
+      // final url = Uri.parse('https://app.midtrans.com/snap/v1/transactions');
+      //sandbox url
+      final url = Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions');
+      final serverKey = dotenv.env['MIDTRANS_SERVER_KEY_SANDBOX'] ?? 'Not Found';
       final response = await http.post(
         url,
         headers: {
@@ -231,6 +229,10 @@ class FirestoreService {
           },
           'customer_details': {
             'email': email,
+            'first_name': userData?['firstName'],
+            'last_name': userData?['lastName'],
+            'phone': userData?['phone'],
+
           }
         }),
       );
@@ -246,6 +248,38 @@ class FirestoreService {
       }
     } catch (e) {
       print("Error in createPaymentLinkMidtrans: $e");
+      return null;
+    }
+  }
+  Future<void> topUpFirebase(String uid, int amount) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('bank')
+          .where('uid', isEqualTo: uid)
+          .get();
+      for (var doc in query.docs) {
+        await doc.reference.update({'balance': FieldValue.increment(amount)});
+      }
+
+    } catch (e) {
+      print("Error in topUpFirebase: $e");
+    }
+  }
+
+  Future<int?>getBalance(String uid) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('bank')
+          .where('uid', isEqualTo: uid)
+          .get();
+      if (query.docs.isNotEmpty) {
+        return query.docs.first.data()['balance'];
+      } else {
+        print("User not found");
+        return null;
+      }
+    } catch (e) {
+      print("Error loading user: $e");
       return null;
     }
   }
