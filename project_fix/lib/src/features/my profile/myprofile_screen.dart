@@ -136,7 +136,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: Text('My Profile '),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
