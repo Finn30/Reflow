@@ -27,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
-                      child: Image(image: AssetImage(gambar_gridwiz)),
+                      child: Image(image: AssetImage(gambarApp)),
                     )
                   ],
                 ),

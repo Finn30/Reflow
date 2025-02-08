@@ -15,7 +15,9 @@ import 'package:project_fix/src/features/my profile/myprofile_screen.dart';
 import 'package:project_fix/src/features/my trip/mytrip_screen.dart';
 import 'package:project_fix/src/features/my wallet/mywallet_screen.dart';
 import 'package:project_fix/src/features/user manual/usermanual_screen.dart';
+import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'dart:io';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -27,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirestoreService fs = FirestoreService();
+
   String email = '';
 
   final LatLng initialPosition =
@@ -100,8 +103,328 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _scanQRCode() {
-    // Implement QR code scanning functionality here
+  Widget _buildScanQRCodeButton() {
+    return Positioned(
+      bottom: 16,
+      left: 100,
+      right: 100,
+      child: GestureDetector(
+        onTap: () async {
+          final qrCodeResult = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => QRCodeScannerScreen()),
+          );
+
+          if (qrCodeResult != null) {
+            // Tampilkan hasil QR code
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('QR Code: $qrCodeResult')),
+            );
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.blue, // Warna tombol
+            borderRadius: BorderRadius.circular(30), // Sudut melengkung
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Warna bayangan
+                blurRadius: 6,
+                offset: Offset(0, 3), // Arah bayangan
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.qr_code_scanner, // Ikon QR code
+                color: Colors.white,
+              ),
+              SizedBox(width: 12), // Jarak antara ikon dan teks
+              Column(
+                children: [
+                  Text(
+                    'Scan QR code', // Teks tombol
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    'to ride', // Teks tombol
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVehicleMenu(String _vehicleNumber) {
+    return Positioned(
+      bottom: 16,
+      left: 16,
+      right: 16,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              // padding: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text.rich(
+                                  TextSpan(
+                                    style: TextStyle(color: Colors.white),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "Rp",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      TextSpan(
+                                        text: "0",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.currency_yen_rounded,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      "Total ride cost",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Container(
+                            width: 1,
+                            height: 40,
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "00:00:08",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.timer,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      "Duration",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // Tambahkan aksi yang ingin dilakukan saat tombol ditekan
+                            print("Tombol kendaraan ditekan!");
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.directions_bike,
+                                    size: 46,
+                                    color: Colors
+                                        .black, // Tambahkan warna putih agar lebih terlihat
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    _vehicleNumber,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Text.rich(
+                          TextSpan(
+                            style: TextStyle(fontSize: 18),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: 'A total of ',
+                                  style: TextStyle(color: Colors.black)),
+                              TextSpan(
+                                  text: '1',
+                                  style: TextStyle(color: Colors.blue)),
+                              TextSpan(
+                                  text: ' bicycles',
+                                  style: TextStyle(color: Colors.black)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Align(
+                          alignment: Alignment.center,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QRCodeScannerScreen(),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.blue,
+                            ),
+                            label: Text(
+                              "Scan code to add",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                side: BorderSide(color: Colors.blue),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              backgroundColor: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.675,
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 6,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Text(
+                "End ride",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -117,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ],
-        title: Text(tAppName),
+        title: Text("Start your ride"),
         centerTitle: true,
       ),
       drawer: FutureBuilder<Map<String, dynamic>>(
@@ -163,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               CircleAvatar(
                                 backgroundImage: FileImage(
-                                    File(userData['pictUrl'] ?? logo_gridwiz)),
+                                    File(userData['pictUrl'] ?? logoApp)),
                                 radius: 30.0,
                               ),
                               SizedBox(width: 16.0),
@@ -291,9 +614,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Image(
-                            image: AssetImage(logo_gridwiz),
-                            width: 40,
-                            height: 40),
+                            image: AssetImage(logoApp), width: 40, height: 40),
                         SizedBox(width: 10),
                         Text(
                           tAppName,
@@ -311,92 +632,28 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
       ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: currentPosition,
-              zoom: 14,
-            ),
-            markers: markers,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-            onMapCreated: (GoogleMapController controller) {
-              mapController = controller;
-            },
-            onTap: (LatLng tappedPoint) {
-              setState(() {
-                // Remove old marker "Tujuan Anda" and add new one
-                markers.removeWhere(
-                    (marker) => marker.markerId.value == "Tujuan Anda");
-                _addMarker(tappedPoint, "Tujuan Anda");
-              });
-            },
-          ),
-          Positioned(
-            bottom: 16,
-            left: 100,
-            right: 100,
-            child: GestureDetector(
-              onTap: () async {
-                final qrCodeResult = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => QRCodeScannerScreen()),
-                );
-
-                if (qrCodeResult != null) {
-                  // Tampilkan hasil QR code
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('QR Code: $qrCodeResult')),
-                  );
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue, // Warna tombol
-                  borderRadius: BorderRadius.circular(30), // Sudut melengkung
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // Warna bayangan
-                      blurRadius: 6,
-                      offset: Offset(0, 3), // Arah bayangan
-                    ),
-                  ],
+      body: Consumer<VehicleNumberProvider>(
+        builder: (context, vehicleProvider, child) {
+          return Stack(
+            children: [
+              GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: currentPosition,
+                  zoom: 14,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.qr_code_scanner, // Ikon QR code
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 12), // Jarak antara ikon dan teks
-                    Column(
-                      children: [
-                        Text(
-                          'Scan QR code', // Teks tombol
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          'to ride', // Teks tombol
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                markers: markers,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                },
               ),
-            ),
-          ),
-        ],
+              vehicleProvider.isVehicleNumberValid
+                  ? _buildVehicleMenu(vehicleProvider.vehicleNumber)
+                  : _buildScanQRCodeButton(),
+            ],
+          );
+        },
       ),
     );
   }

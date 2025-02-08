@@ -1,5 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/features/home%20screen/home_screen.dart';
+import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/vehicle%20number/vehiclenumber_screen.dart';
+import 'package:project_fix/src/provider/vehicle_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -34,6 +38,16 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   void onQRViewCreated(QRViewController qrController) {
     controller = qrController;
     controller?.scannedDataStream.listen((scanData) {
+      String vehicleNumber = scanData.code ?? "No data found";
+      if (scanData.code != null) {
+        controller?.pauseCamera();
+        Provider.of<VehicleNumberProvider>(context, listen: false)
+            .setVehicleNumber(vehicleNumber);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        ); // Kembalikan hasil scan
+      }
       setState(() {
         result = scanData.code ?? "No data found"; // Handle nullable value
       });
@@ -172,6 +186,12 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VehicleNumberScreen(),
+                          ),
+                        );
                         // Handle vehicle number display
                       },
                       child: Text(

@@ -96,11 +96,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
-
   Future<void> changeProfileImage() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
         setState(() {
@@ -109,7 +109,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             String fileName = pickedFile.path;
             fs.changeProfilPicture(email, fileName).then((value) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Gambar profil berhasil diperbarui.')),
+                const SnackBar(
+                    content: Text('Gambar profil berhasil diperbarui.')),
               );
             });
           } catch (e) {
@@ -140,7 +141,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
           },
         ),
       ),
@@ -224,7 +226,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AuthorizationSettingsScreen()),
+                            builder: (context) =>
+                                AuthorizationSettingsScreen()),
                       );
                     },
                   ),
@@ -232,27 +235,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     icon: Icons.logout,
                     text: 'Sign Out',
                     onPressed: () {
-                        showDialog(
+                      showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                           title: const Text('Sign Out'),
-                          content: const Text('Are you sure you want to sign out?'),
+                          content:
+                              const Text('Are you sure you want to sign out?'),
                           actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                            Navigator.pop(context);
-                            fs.signOut();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => WelcomeScreen()),
-                            );
-                            },
-                            child: const Text('Sign Out'),
-                          ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                fs.signOut();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WelcomeScreen()),
+                                );
+                              },
+                              child: const Text('Sign Out'),
+                            ),
                           ],
                         ),
                       );

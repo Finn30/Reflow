@@ -1,1 +1,1 @@
-const String tAppName = "Gridwiz";
+const String tAppName = "Re:flow";

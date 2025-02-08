@@ -1,2 +1,2 @@
-const String logo_gridwiz = 'assets/img/gridwiz_logo.jpg';
-const String gambar_gridwiz = 'assets/img/gridwiz.jpg';
+const String logoApp = 'assets/img/REflowww.png';
+const String gambarApp = 'assets/img/REflowww.png';

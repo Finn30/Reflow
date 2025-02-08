@@ -25,7 +25,7 @@ class AboutUsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image(
-                      image: AssetImage(gambar_gridwiz),
+                      image: AssetImage(gambarApp),
                       height: height * 0.2,
                       width: 300,
                     ),

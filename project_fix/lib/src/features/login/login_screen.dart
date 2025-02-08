@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,7 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       final userDoc = querySnapshot.docs.first;
       final userData = userDoc.data();
-      final hashedCurrPassword = sha256.convert(utf8.encode(password)).toString();
+      final hashedCurrPassword =
+          sha256.convert(utf8.encode(password)).toString();
 
       // Memeriksa kecocokan password
       if (userData['password'] == hashedCurrPassword) {
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           // Gambar
                           Image(
-                            image: AssetImage(gambar_gridwiz),
+                            image: AssetImage(gambarApp),
                             height: 200,
                           ),
                           SizedBox(height: 20),
@@ -240,7 +240,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 24,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        border: Border.all(color: Colors.black),
+                                        border: Border.all(
+                                            color: isChecked
+                                                ? Colors.blue
+                                                : Colors.grey),
                                         color: Colors.white,
                                       ),
                                     ),
