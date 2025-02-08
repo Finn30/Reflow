@@ -65,8 +65,8 @@ dev_dependencies:
 flutter_native_splash:
   color: "#f7f6f1"
   color_dark: "#272727"
-  image: assets/img/gridwiz_logo.jpg
-  image_dark: assets/img/gridwiz_logo.jpg
+  image: assets/img/REflowww.png
+  image_dark: assets/img/REflowww_white.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -82,6 +82,7 @@ flutter:
   assets:
     - .env
     - assets/img/REflowww.png
+    - assets/img/REflowww_white.png
     - assets/img/gridwiz_logo.jpg
     - assets/img/gridwiz.jpg
     - assets/img/ngetes.jpg
