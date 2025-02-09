@@ -12,7 +12,8 @@ class QRCodeScannerScreen extends StatefulWidget {
   _QRCodeScannerScreenState createState() => _QRCodeScannerScreenState();
 }
 
-class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
+class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
+    with WidgetsBindingObserver {
   String result = "Scan a QR code";
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -35,6 +36,28 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
     controller?.resumeCamera();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      controller?.pauseCamera();
+    } else if (state == AppLifecycleState.resumed) {
+      controller?.resumeCamera();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   void onQRViewCreated(QRViewController qrController) {
     controller = qrController;
     controller?.scannedDataStream.listen((scanData) {
@@ -42,7 +65,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
       if (scanData.code != null) {
         controller?.pauseCamera();
         Provider.of<VehicleNumberProvider>(context, listen: false)
-            .setVehicleNumber(vehicleNumber);
+            .addVehicleNumber(vehicleNumber);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -62,12 +85,6 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   Future<void> flipCamera() async {
     await controller?.flipCamera();
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 
   Widget buildQrView() {
@@ -186,7 +203,9 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
+                        controller
+                            ?.pauseCamera(); // Pause camera before navigation
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => VehicleNumberScreen(),
