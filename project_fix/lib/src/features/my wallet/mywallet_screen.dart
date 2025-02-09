@@ -49,7 +49,8 @@ class MyWalletScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16.0),
                   FutureBuilder<int?>(
-                    future: fs.getBalance(uid), // Panggil fungsi async untuk mendapatkan saldo
+                    future: fs.getBalance(
+                        uid), // Panggil fungsi async untuk mendapatkan saldo
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator(color: Colors.white);
@@ -77,9 +78,22 @@ class MyWalletScreen extends StatelessWidget {
                           ],
                         );
                       } else {
-                        return Text(
-                          'Balance not available',
-                          style: TextStyle(color: Colors.white),
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 8.0),
+                            Text('Rp',
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                            SizedBox(width: 2.0),
+                            Text("0",
+                                style: TextStyle(
+                                    fontSize: 40.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                          ],
                         );
                       }
                     },
@@ -128,8 +142,7 @@ class MyWalletScreen extends StatelessWidget {
                             Icon(Icons.credit_card,
                                 color: Colors.black, size: 35.0),
                             SizedBox(width: 8.0),
-                            Text('Bank Card',
-                                style: TextStyle(fontSize: 18.0)),
+                            Text('Bank Card', style: TextStyle(fontSize: 18.0)),
                           ],
                         ),
                         SizedBox(width: 8.0),
@@ -171,8 +184,7 @@ class MyWalletScreen extends StatelessWidget {
                             Icon(Icons.refresh,
                                 color: Colors.black, size: 35.0),
                             SizedBox(width: 8.0),
-                            Text('Recharge',
-                                style: TextStyle(fontSize: 18.0)),
+                            Text('Recharge', style: TextStyle(fontSize: 18.0)),
                           ],
                         ),
                         SizedBox(width: 8.0),

@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirestoreService fs = FirestoreService();
 
   String email = '';
+  bool showRideMenu = false;
+  String? selectedVehicle;
 
   final LatLng initialPosition =
       const LatLng(-8.586705728515044, 116.09220835292544); // Default location
@@ -168,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildVehicleMenu(String _vehicleNumber) {
+  Widget buildVehicleMenu(VehicleNumberProvider provider) {
     return Positioned(
       bottom: 16,
       left: 16,
@@ -303,41 +305,65 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            // Tambahkan aksi yang ingin dilakukan saat tombol ditekan
-                            print("Tombol kendaraan ditekan!");
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.directions_bike,
-                                    size: 46,
-                                    color: Colors
-                                        .black, // Tambahkan warna putih agar lebih terlihat
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    _vehicleNumber,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
+                        Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: provider.vehicleNumbers.map((number) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedVehicle =
+                                            number; // Simpan kendaraan yang dipilih
+                                        showRideMenu =
+                                            true; // Tampilkan Ride Menu
+                                      });
+                                    },
+                                    child: Card(
+                                      // elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        width: 100, // Ukuran setiap Card
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.directions_bike,
+                                              size: 46,
+                                              color: Colors.black,
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              number,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            // SizedBox(height: 8),
+                                            Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
@@ -350,7 +376,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   text: 'A total of ',
                                   style: TextStyle(color: Colors.black)),
                               TextSpan(
-                                  text: '1',
+                                  text:
+                                      provider.vehicleNumbers.length.toString(),
                                   style: TextStyle(color: Colors.blue)),
                               TextSpan(
                                   text: ' bicycles',
@@ -419,6 +446,285 @@ class _HomeScreenState extends State<HomeScreen> {
                 "End ride",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRideMenu(String selectedVehicle) {
+    return Positioned(
+      bottom: 16,
+      left: 16,
+      right: 16,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Informasi kendaraan yang dipilih
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          selectedVehicle,
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.battery_full,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              "100%",
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            SizedBox(width: 16),
+                            Icon(
+                              Icons.speed,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(width: 4),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "0.00",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: " km/h",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Image(
+                        image: AssetImage("assets/img/bicycle.png"), width: 80),
+                  ],
+                ),
+                Divider(thickness: 1, color: Colors.grey[300]),
+                // Biaya dan Durasi
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Rp",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "0",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          "Cost",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "00:00:16",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          "Duration",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.lightbulb, color: Colors.grey[400]),
+                        Text(
+                          "Light",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                // Divider(thickness: 1, color: Colors.grey[300]),
+                // Tombol Parking dan End Ride
+                Row(
+                  children: [
+                    Icon(Icons.access_time_filled, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text(
+                      "2025/09/12",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "00:00:00 PM",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 2),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.location_on, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        "83126, Universitas Mataram Selaparang Mataram West Nusa Tenggara",
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 18),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Handle Parking Action
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          minimumSize: Size(0, 50),
+                        ),
+                        child: Text(
+                          "Parking",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Handle End Ride Action
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          minimumSize: Size(0, 50),
+                        ),
+                        child: Text(
+                          "End ride",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // Tombol Close di Pojok Kanan Atas
+          Positioned(
+            top: -8,
+            right: -8,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  showRideMenu = false;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Icon(Icons.close, color: Colors.black, size: 20),
               ),
             ),
           ),
@@ -649,7 +955,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               vehicleProvider.isVehicleNumberValid
-                  ? _buildVehicleMenu(vehicleProvider.vehicleNumber)
+                  ? (showRideMenu && selectedVehicle != null
+                      ? buildRideMenu(selectedVehicle!)
+                      : buildVehicleMenu(vehicleProvider))
                   : _buildScanQRCodeButton(),
             ],
           );
