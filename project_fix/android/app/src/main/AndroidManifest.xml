@@ -15,7 +15,7 @@
 
 
     <application
-        android:label="project_fix"
+        android:label="Reflow"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
