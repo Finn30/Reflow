@@ -50,6 +50,7 @@ dependencies:
   webview_flutter: ^4.10.0
   flutter_dotenv: ^5.2.1
   provider: ^6.1.2
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,16 @@ flutter_native_splash:
   color_dark: "#272727"
   image: assets/img/REflowww.png
   image_dark: assets/img/REflowww_white.png
+  fullscreen: true
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/img/REflowww.png"
+  adaptive_icon:
+    android: true
+    foreground: "assets/img/REflowww.png"
+    background: "@drawable/adaptive_icon_background"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
