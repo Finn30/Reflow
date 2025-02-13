@@ -87,7 +87,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
     setState(() {});
   }
 
-  Widget buildQrView() {
+  Widget buildQrView(double screenWidth, double screenHeight) {
     return QRView(
       key: qrKey,
       onQRViewCreated: onQRViewCreated,
@@ -96,13 +96,17 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
         borderRadius: 12,
         borderLength: 30,
         borderWidth: 10,
-        cutOutSize: 250, // Adjusted size for better scanning
+        cutOutSize: screenWidth * 0.7, // 70% of the screen width
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Get screen size for responsiveness
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -114,9 +118,10 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
       ),
       body: Stack(
         children: [
-          Center(child: buildQrView()), // Kotak scanner
+          Center(
+              child: buildQrView(screenWidth, screenHeight)), // Kotak scanner
           Positioned(
-            top: 140,
+            top: screenHeight * 0.1, // Moved carousel higher up
             left: 0,
             right: 0,
             child: Center(
@@ -125,7 +130,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
                   // Carousel for images
                   CarouselSlider(
                     options: CarouselOptions(
-                      height: 150,
+                      height: screenHeight * 0.15, // Reduced height of carousel
                       autoPlay: true,
                       enlargeCenterPage: true,
                       onPageChanged: (index, reason) {
@@ -136,8 +141,10 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
                     ),
                     items: imgList
                         .map((item) => Container(
-                              width: 150,
-                              height: 150,
+                              width: screenWidth *
+                                  0.5, // Adjust width for responsiveness
+                              height: screenHeight *
+                                  0.15, // Reduced height for carousel
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
@@ -177,7 +184,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
             ),
           ),
           Positioned(
-            bottom: 270,
+            bottom: screenHeight * 0.3, // Adjust for screen size
             left: 0,
             right: 0,
             child: Column(

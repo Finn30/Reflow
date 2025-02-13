@@ -8,13 +8,17 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Mendapatkan lebar layar perangkat
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [Colors.blue.shade400, Colors.blue.shade900],
-      )),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.blue.shade400, Colors.blue.shade900],
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
@@ -23,47 +27,65 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Gambar Logo
                 Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
                       child: Image(image: AssetImage(gambarAppWhite)),
-                    )
+                    ),
                   ],
                 ),
+                // Tombol Login dan Daftar
                 Column(
                   children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        minimumSize: Size(300, 50),
+                    // Tombol Login
+                    Container(
+                      width: screenWidth < 412
+                          ? 300
+                          : screenWidth *
+                              0.8, // Menyesuaikan lebar tombol, minimal 300px
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          minimumSize: Size(
+                              screenWidth < 412 ? 300 : screenWidth * 0.8, 50),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()));
+                        },
+                        child: Text('Login'),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
-                      },
-                      child: Text('Login'),
                     ),
                     SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        foregroundColor: Colors.white,
-                        minimumSize: Size(300, 50),
+                    // Tombol Daftar
+                    Container(
+                      width: screenWidth < 412
+                          ? 300
+                          : screenWidth *
+                              0.8, // Menyesuaikan lebar tombol, minimal 300px
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          foregroundColor: Colors.white,
+                          minimumSize: Size(
+                              screenWidth < 412 ? 300 : screenWidth * 0.8, 50),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterScreen()));
+                        },
+                        child: Text('Daftar'),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterScreen()));
-                      },
-                      child: Text('Daftar'),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
