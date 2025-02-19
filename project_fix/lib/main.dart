@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:project_fix/firebase_options.dart';
+// import 'package:project_fix/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
