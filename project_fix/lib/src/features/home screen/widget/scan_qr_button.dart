@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/qrcodescanner_screen.dart';
 
 class ScanQRButton extends StatelessWidget {
-  const ScanQRButton({Key? key}) : super(key: key);
+  // final Function(String) onScanSuccess;
+
+  const ScanQRButton({
+    Key? key,
+    // required this.onScanSuccess,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +23,7 @@ class ScanQRButton extends StatelessWidget {
           );
 
           if (qrCodeResult != null) {
-            // Tampilkan hasil QR code
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('QR Code: $qrCodeResult')),
-            );
+            // onScanSuccess(qrCodeResult);
           }
         },
         child: Container(

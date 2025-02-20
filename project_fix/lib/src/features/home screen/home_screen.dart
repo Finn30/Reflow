@@ -7,6 +7,7 @@ import 'package:project_fix/src/constant/text_string.dart';
 import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/qrcodescanner_screen.dart';
 import 'package:project_fix/src/features/home%20screen/widget/ride_menu.dart';
 import 'package:project_fix/src/features/home%20screen/widget/scan_qr_button.dart';
+import 'package:project_fix/src/features/home%20screen/widget/vehicle_unlock_menu.dart';
 import 'package:project_fix/src/features/home%20screen/widget/vehicle_menu.dart';
 import 'package:project_fix/src/function/services.dart';
 import 'package:project_fix/src/features/about us/aboutus_screen.dart';
@@ -34,15 +35,27 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirestoreService fs = FirestoreService();
 
   String email = '';
-  bool showRideMenu = false;
+
   String? selectedVehicle;
+  bool showRideMenu = false;
+
+  void _selectVehicle(String vehicle) {
+    setState(() {
+      selectedVehicle = vehicle;
+      showRideMenu = true;
+    });
+  }
+
+  void _closeRideMenu() {
+    setState(() {
+      showRideMenu = false;
+    });
+  }
 
   final LatLng initialPosition =
-      const LatLng(-8.586705728515044, 116.09220835292544); // Default location
+      const LatLng(-8.586705728515044, 116.09220835292544);
   late GoogleMapController mapController;
-
-  LatLng currentPosition =
-      const LatLng(-8.586705728515044, 116.09220835292544); // Default
+  LatLng currentPosition = const LatLng(-8.586705728515044, 116.09220835292544);
   bool isLocationEnabled = false;
   Set<Marker> markers = {};
 
@@ -59,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!serviceEnabled) {
         setState(() {
           isLocationEnabled = false;
-          currentPosition = initialPosition; // Use default location
+          currentPosition = initialPosition;
           _addMarker(currentPosition, "Your Location");
         });
         return;
@@ -73,14 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
             permission != LocationPermission.always) {
           setState(() {
             isLocationEnabled = false;
-            currentPosition = initialPosition; // Use default location
+            currentPosition = initialPosition;
             _addMarker(currentPosition, "Your Location");
           });
           return;
         }
       }
 
-      // Get current location
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       setState(() {
@@ -92,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
       print('Error: $e');
       setState(() {
         isLocationEnabled = false;
-        currentPosition = initialPosition; // Use default location
+        currentPosition = initialPosition;
         _addMarker(currentPosition, "Your Location");
       });
     }
@@ -105,19 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
         position: position,
         infoWindow: InfoWindow(title: title),
       ));
-    });
-  }
-
-  void _selectVehicle(String vehicle) {
-    setState(() {
-      selectedVehicle = vehicle;
-      showRideMenu = true;
-    });
-  }
-
-  void _closeRideMenu() {
-    setState(() {
-      showRideMenu = false;
     });
   }
 
@@ -342,14 +341,104 @@ class _HomeScreenState extends State<HomeScreen> {
                   mapController = controller;
                 },
               ),
-              vehicleProvider.isVehicleNumberValid
-                  ? (showRideMenu && selectedVehicle != null
-                      ? RideMenu(
-                          selectedVehicle: selectedVehicle!,
-                          onClose: _closeRideMenu,
-                        )
-                      : VehicleMenu(onVehicleSelected: _selectVehicle))
-                  : ScanQRButton(),
+              if (!vehicleProvider.isUnlocked &&
+                  vehicleProvider.lastVehicleNumber != null &&
+                  vehicleProvider.vehicleNumbers.isNotEmpty &&
+                  !showRideMenu)
+                VehicleUnlockMenu(
+                  vehicleNumber: vehicleProvider.lastVehicleNumber!,
+                  onUnlock: () async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  TweenAnimationBuilder(
+                                    tween: Tween(begin: 0.0, end: 1.0),
+                                    duration: Duration(seconds: 3),
+                                    builder: (context, double value, child) {
+                                      return SizedBox(
+                                        width: 150,
+                                        height: 150,
+                                        child: CircularProgressIndicator(
+                                          value: value,
+                                          strokeWidth: 20,
+                                          color: Colors.blue,
+                                          backgroundColor: Colors.grey[300],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Image.asset(
+                                    "assets/img/bicycle.png",
+                                    height: 100,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 24),
+                              Text(
+                                "${vehicleProvider.lastVehicleNumber}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Unlocking",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Timeout in 3 seconds",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                    await Future.delayed(Duration(seconds: 3));
+                    Navigator.of(context).pop();
+                    vehicleProvider.unlockVehicle();
+                    setState(() {});
+                  },
+                  onAnother: () {
+                    vehicleProvider.clearVehicleNumbers();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => QRCodeScannerScreen()),
+                    );
+                  },
+                  onClose: () {
+                    vehicleProvider.clearVehicleNumbers();
+                    setState(() {});
+                  },
+                )
+              else if (vehicleProvider.isUnlocked &&
+                  vehicleProvider.vehicleNumbers.isNotEmpty &&
+                  !showRideMenu)
+                VehicleMenu(onVehicleSelected: _selectVehicle),
+              if (showRideMenu && selectedVehicle != null)
+                RideMenu(
+                  selectedVehicle: selectedVehicle!,
+                  onClose: _closeRideMenu,
+                ),
+              if (vehicleProvider.vehicleNumbers.isEmpty && !showRideMenu)
+                ScanQRButton(),
             ],
           );
         },
