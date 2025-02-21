@@ -41,28 +41,44 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showRideMenu = false;
   bool isParking = false;
 
-  void _selectVehicle(String vehicle) {
+  void _selectVehicle(String vehicle, VehicleNumberProvider vehicleProvider) {
     setState(() {
       selectedVehicle = vehicle;
-      showRideMenu = true;
-    });
-  }
-
-  void _closeRideMenu() {
-    setState(() {
-      showRideMenu = false;
+      if (vehicleProvider.isVehicleParked(vehicle)) {
+        isParking = true;
+        showRideMenu = false;
+      } else {
+        showRideMenu = true;
+        isParking = false;
+      }
     });
   }
 
   void _switchToParking() {
     setState(() {
       isParking = true;
+      showRideMenu = false;
     });
   }
 
   void _switchToRide() {
     setState(() {
       isParking = false;
+      showRideMenu = true;
+    });
+  }
+
+  void _closeParkingMenu() {
+    setState(() {
+      isParking = false;
+      selectedVehicle = null;
+    });
+  }
+
+  void _closeRideMenu() {
+    setState(() {
+      showRideMenu = false;
+      selectedVehicle = null;
     });
   }
 
@@ -441,23 +457,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     vehicleProvider.clearVehicleNumbers();
                     setState(() {});
                   },
-                )
-              else if (vehicleProvider.isUnlocked &&
-                  vehicleProvider.vehicleNumbers.isNotEmpty &&
-                  !showRideMenu)
-                VehicleMenu(onVehicleSelected: _selectVehicle),
+                ),
+              if (!showRideMenu && !isParking)
+                VehicleMenu(
+                  onVehicleSelected: (vehicle) {
+                    _selectVehicle(vehicle, vehicleProvider);
+                  },
+                  isParked: (selectedVehicle != null)
+                      ? vehicleProvider.isVehicleParked(selectedVehicle!)
+                      : false,
+                ),
               if (showRideMenu && selectedVehicle != null)
-                if (!isParking)
-                  RideMenu(
-                    selectedVehicle: selectedVehicle!,
-                    onClose: _switchToRide,
-                    onEndRide: () {},
-                    onParkingComplete: _switchToParking,
-                  )
-                else
-                  ParkingMenu(
-                    onClose: _switchToRide,
-                  ),
+                RideMenu(
+                  selectedVehicle: selectedVehicle!,
+                  onClose: _closeRideMenu,
+                  onEndRide: () {},
+                  onParkingComplete: _switchToParking,
+                ),
+              if (isParking && selectedVehicle != null)
+                ParkingMenu(
+                  selectedVehicle: selectedVehicle!,
+                  onClose: _closeParkingMenu,
+                  onEndRide: () {},
+                  onParkingComplete: _switchToParking,
+                  onKeepRiding: () {
+                    vehicleProvider.unparkVehicle(selectedVehicle ?? "");
+                    _switchToRide();
+                  },
+                ),
               if (vehicleProvider.vehicleNumbers.isEmpty && !showRideMenu)
                 ScanQRButton(),
             ],

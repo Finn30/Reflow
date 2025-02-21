@@ -5,10 +5,12 @@ import 'package:provider/provider.dart';
 
 class VehicleMenu extends StatelessWidget {
   final Function(String) onVehicleSelected;
+  final bool isParked;
 
   const VehicleMenu({
     Key? key,
     required this.onVehicleSelected,
+    required this.isParked,
   }) : super(key: key);
 
   @override
@@ -158,6 +160,8 @@ class VehicleMenu extends StatelessWidget {
                                 child: Row(
                                   children:
                                       provider.vehicleNumbers.map((number) {
+                                    bool isParked =
+                                        provider.isVehicleParked(number);
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8),
@@ -173,7 +177,7 @@ class VehicleMenu extends StatelessWidget {
                                             width: 100, // Ukuran setiap Card
                                             padding: EdgeInsets.all(12),
                                             decoration: BoxDecoration(
-                                              color: Colors.blue,
+                                              color: Colors.grey[100],
                                               borderRadius:
                                                   BorderRadius.circular(15),
                                             ),
@@ -181,22 +185,24 @@ class VehicleMenu extends StatelessWidget {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Icon(
-                                                  Icons.directions_bike,
+                                                  isParked
+                                                      ? Icons.local_parking
+                                                      : Icons.pedal_bike,
                                                   size: 46,
-                                                  color: Colors.black,
+                                                  color: Colors.green,
                                                 ),
                                                 SizedBox(height: 4),
                                                 Text(
                                                   number,
                                                   style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Colors.black,
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                                 // SizedBox(height: 8),
                                                 Icon(
                                                   Icons.keyboard_arrow_down,
-                                                  color: Colors.white,
+                                                  color: Colors.grey,
                                                 ),
                                               ],
                                             ),

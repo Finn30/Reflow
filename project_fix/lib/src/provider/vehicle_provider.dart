@@ -3,19 +3,22 @@ import 'package:flutter/material.dart';
 class VehicleNumberProvider with ChangeNotifier {
   List<String> _vehicleNumbers = [];
   String? _lastVehicleNumber;
-  bool _isVehicleNumberValid = false;
+  Map<String, bool> _parkedVehicles =
+      {}; // Menyimpan status parkir per kendaraan
   bool _isUnlocked = false;
 
   List<String> get vehicleNumbers => _vehicleNumbers;
   String? get lastVehicleNumber => _lastVehicleNumber;
-  bool get isVehicleNumberValid => _isVehicleNumberValid;
   bool get isUnlocked => _isUnlocked;
+
+  bool isVehicleParked(String vehicleNumber) {
+    return _parkedVehicles[vehicleNumber] ?? false;
+  }
 
   void addVehicleNumber(String value) {
     if (!_vehicleNumbers.contains(value)) {
       _vehicleNumbers.add(value);
       _lastVehicleNumber = value;
-      _isVehicleNumberValid = true;
       _isUnlocked = false;
       notifyListeners();
     }
@@ -26,10 +29,20 @@ class VehicleNumberProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void parkVehicle(String vehicleNumber) {
+    _parkedVehicles[vehicleNumber] = true;
+    notifyListeners();
+  }
+
+  void unparkVehicle(String vehicleNumber) {
+    _parkedVehicles[vehicleNumber] = false;
+    notifyListeners();
+  }
+
   void clearVehicleNumbers() {
     _vehicleNumbers.clear();
     _lastVehicleNumber = null;
-    _isVehicleNumberValid = false;
+    _parkedVehicles.clear();
     _isUnlocked = false;
     notifyListeners();
   }

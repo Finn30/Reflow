@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
+import 'package:project_fix/src/provider/vehicle_provider.dart';
+import 'package:provider/provider.dart';
 
 class RideMenu extends StatefulWidget {
   final String selectedVehicle;
@@ -37,8 +39,10 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
       barrierDismissible: false,
       builder: (BuildContext context) {
         Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop();
-          widget.onParkingComplete(); // Pindah ke ParkingMenu
+          if (!isCancelled) {
+            Navigator.of(context).pop();
+            widget.onParkingComplete();
+          } // Pindah ke ParkingMenu
         });
 
         return AlertDialog(
@@ -90,7 +94,7 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                 top: 0,
                 child: GestureDetector(
                   onTap: () {
-                    isCancelled = true;
+                    // isCancelled = true;
                     Navigator.of(context)
                         .pop(); // Tutup popup, tetap di RideMenu
                   },
@@ -307,6 +311,9 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
+                          Provider.of<VehicleNumberProvider>(context,
+                                  listen: false)
+                              .parkVehicle(widget.selectedVehicle);
                           _showParkingPopup(context);
                         },
                         style: ElevatedButton.styleFrom(
