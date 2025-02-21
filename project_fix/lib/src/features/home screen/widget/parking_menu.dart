@@ -43,6 +43,8 @@ class _ParkingMenuState extends State<ParkingMenu>
       builder: (BuildContext context) {
         Future.delayed(Duration(seconds: 2), () {
           if (!isCancelled) {
+            Provider.of<VehicleNumberProvider>(context, listen: false)
+                .unparkVehicle(widget.selectedVehicle);
             Navigator.of(context).pop();
             widget.onKeepRiding();
           }
@@ -390,9 +392,6 @@ class _ParkingMenuState extends State<ParkingMenu>
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Provider.of<VehicleNumberProvider>(context,
-                                  listen: false)
-                              .unparkVehicle(widget.selectedVehicle);
                           _showParkingPopup(context);
                         },
                         style: ElevatedButton.styleFrom(

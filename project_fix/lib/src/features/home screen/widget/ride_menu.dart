@@ -40,6 +40,8 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
       builder: (BuildContext context) {
         Future.delayed(Duration(seconds: 2), () {
           if (!isCancelled) {
+            Provider.of<VehicleNumberProvider>(context, listen: false)
+                .parkVehicle(widget.selectedVehicle);
             Navigator.of(context).pop();
             widget.onParkingComplete();
           } // Pindah ke ParkingMenu
@@ -94,7 +96,7 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                 top: 0,
                 child: GestureDetector(
                   onTap: () {
-                    // isCancelled = true;
+                    isCancelled = true;
                     Navigator.of(context)
                         .pop(); // Tutup popup, tetap di RideMenu
                   },
@@ -311,9 +313,6 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Provider.of<VehicleNumberProvider>(context,
-                                  listen: false)
-                              .parkVehicle(widget.selectedVehicle);
                           _showParkingPopup(context);
                         },
                         style: ElevatedButton.styleFrom(
