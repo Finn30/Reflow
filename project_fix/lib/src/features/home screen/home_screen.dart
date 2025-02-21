@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:project_fix/src/constant/image_string.dart';
 import 'package:project_fix/src/constant/text_string.dart';
 import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/qrcodescanner_screen.dart';
+import 'package:project_fix/src/features/home%20screen/widget/parking_menu.dart';
 import 'package:project_fix/src/features/home%20screen/widget/ride_menu.dart';
 import 'package:project_fix/src/features/home%20screen/widget/scan_qr_button.dart';
 import 'package:project_fix/src/features/home%20screen/widget/vehicle_unlock_menu.dart';
@@ -38,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String? selectedVehicle;
   bool showRideMenu = false;
+  bool isParking = false;
 
   void _selectVehicle(String vehicle) {
     setState(() {
@@ -49,6 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void _closeRideMenu() {
     setState(() {
       showRideMenu = false;
+    });
+  }
+
+  void _switchToParking() {
+    setState(() {
+      isParking = true;
+    });
+  }
+
+  void _switchToRide() {
+    setState(() {
+      isParking = false;
     });
   }
 
@@ -433,10 +447,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   !showRideMenu)
                 VehicleMenu(onVehicleSelected: _selectVehicle),
               if (showRideMenu && selectedVehicle != null)
-                RideMenu(
-                  selectedVehicle: selectedVehicle!,
-                  onClose: _closeRideMenu,
-                ),
+                if (!isParking)
+                  RideMenu(
+                    selectedVehicle: selectedVehicle!,
+                    onClose: _switchToRide,
+                    onEndRide: () {},
+                    onParkingComplete: _switchToParking,
+                  )
+                else
+                  ParkingMenu(
+                    onClose: _switchToRide,
+                  ),
               if (vehicleProvider.vehicleNumbers.isEmpty && !showRideMenu)
                 ScanQRButton(),
             ],

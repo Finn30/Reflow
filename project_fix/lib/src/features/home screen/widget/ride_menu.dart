@@ -1,14 +1,108 @@
 import 'package:flutter/material.dart';
+import 'package:gif/gif.dart';
 
-class RideMenu extends StatelessWidget {
+class RideMenu extends StatefulWidget {
   final String selectedVehicle;
   final VoidCallback onClose;
+  final VoidCallback onEndRide;
+  final VoidCallback onParkingComplete;
 
   const RideMenu({
     Key? key,
     required this.selectedVehicle,
     required this.onClose,
+    required this.onEndRide,
+    required this.onParkingComplete,
   }) : super(key: key);
+
+  @override
+  _RideMenuState createState() => _RideMenuState();
+}
+
+class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
+  late GifController _gifController;
+  bool isCancelled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _gifController = GifController(vsync: this);
+  }
+
+  void _showParkingPopup(BuildContext context) {
+    isCancelled = false;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+          widget.onParkingComplete(); // Pindah ke ParkingMenu
+        });
+
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(20),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          content: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    "Lock",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Gif(
+                    controller: _gifController,
+                    duration: Duration(seconds: 2),
+                    autostart: Autostart.loop,
+                    image: AssetImage("assets/animation/lock.gif"),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Park bicycles according to regulations",
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Manual lock ",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        TextSpan(text: "Temporary parking available"),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    isCancelled = true;
+                    Navigator.of(context)
+                        .pop(); // Tutup popup, tetap di RideMenu
+                  },
+                  child: Icon(Icons.close, color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +138,7 @@ class RideMenu extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          selectedVehicle,
+                          widget.selectedVehicle,
                           style: TextStyle(
                             fontSize: 24,
                             color: Colors.black,
@@ -213,7 +307,7 @@ class RideMenu extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle Parking Action
+                          _showParkingPopup(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
@@ -263,7 +357,7 @@ class RideMenu extends StatelessWidget {
             top: -8,
             right: -8,
             child: GestureDetector(
-              onTap: onClose,
+              onTap: widget.onClose,
               child: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
