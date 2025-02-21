@@ -162,11 +162,16 @@ class VehicleMenu extends StatelessWidget {
                                       provider.vehicleNumbers.map((number) {
                                     bool isParked =
                                         provider.isVehicleParked(number);
+                                    bool isSelected =
+                                        number == provider.lastVehicleNumber;
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8),
                                       child: GestureDetector(
-                                        onTap: () => onVehicleSelected(number),
+                                        onTap: () {
+                                          provider.selectVehicle(number);
+                                          onVehicleSelected(number);
+                                        },
                                         child: Card(
                                           // elevation: 2,
                                           shape: RoundedRectangleBorder(
@@ -177,7 +182,9 @@ class VehicleMenu extends StatelessWidget {
                                             width: 100, // Ukuran setiap Card
                                             padding: EdgeInsets.all(12),
                                             decoration: BoxDecoration(
-                                              color: Colors.grey[100],
+                                              color: isSelected
+                                                  ? Colors.blue
+                                                  : Colors.grey[100],
                                               borderRadius:
                                                   BorderRadius.circular(15),
                                             ),
@@ -189,20 +196,26 @@ class VehicleMenu extends StatelessWidget {
                                                       ? Icons.local_parking
                                                       : Icons.pedal_bike,
                                                   size: 46,
-                                                  color: Colors.green,
+                                                  color: isSelected
+                                                      ? Colors.white
+                                                      : Colors.green,
                                                 ),
                                                 SizedBox(height: 4),
                                                 Text(
                                                   number,
                                                   style: TextStyle(
-                                                    color: Colors.black,
+                                                    color: isSelected
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                                 // SizedBox(height: 8),
                                                 Icon(
                                                   Icons.keyboard_arrow_down,
-                                                  color: Colors.grey,
+                                                  color: isSelected
+                                                      ? Colors.white
+                                                      : Colors.grey,
                                                 ),
                                               ],
                                             ),

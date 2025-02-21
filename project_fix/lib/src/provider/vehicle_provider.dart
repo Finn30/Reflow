@@ -15,6 +15,11 @@ class VehicleNumberProvider with ChangeNotifier {
     return _parkedVehicles[vehicleNumber] ?? false;
   }
 
+  void selectVehicle(String vehicleNumber) {
+    _lastVehicleNumber = vehicleNumber;
+    notifyListeners();
+  }
+
   void addVehicleNumber(String value) {
     if (!_vehicleNumbers.contains(value)) {
       _vehicleNumbers.add(value);
