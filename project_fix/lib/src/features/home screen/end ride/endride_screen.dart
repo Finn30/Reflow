@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class EndRideScreen extends StatelessWidget {
-  const EndRideScreen({Key? key}) : super(key: key);
+  final String vehicleNumber;
+
+  const EndRideScreen({Key? key, required this.vehicleNumber})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +14,7 @@ class EndRideScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Center(
-        child: Text('End Ride Screen'),
+        child: Text('End Ride for Vehicle: $vehicleNumber'),
       ),
     );
   }

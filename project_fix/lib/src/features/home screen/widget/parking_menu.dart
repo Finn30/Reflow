@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:project_fix/src/features/home screen/end ride/endride_screen.dart';
 
 class ParkingMenu extends StatefulWidget {
   final String selectedVehicle;
@@ -414,7 +415,14 @@ class _ParkingMenuState extends State<ParkingMenu>
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle End Ride Action
+                          // Navigate to EndRideScreen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EndRideScreen(
+                                  vehicleNumber: widget.selectedVehicle),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
