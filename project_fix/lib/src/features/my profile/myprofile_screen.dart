@@ -138,13 +138,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       appBar: AppBar(
         title: Text('My Profile '),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pushReplacement(
+        //         context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        //   },
+        // ),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fs.loadUser(email).then((value) => value ?? {}),

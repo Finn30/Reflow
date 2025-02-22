@@ -124,6 +124,7 @@ class _ParkingMenuState extends State<ParkingMenu>
         Future.delayed(Duration(seconds: 2), () {
           if (!isCancelled) {
             Navigator.of(context).pop();
+            widget.onEndRide();
             Navigator.push(
               context,
               MaterialPageRoute(

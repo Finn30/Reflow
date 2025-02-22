@@ -388,6 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
+                                  SizedBox(height: 200),
                                   TweenAnimationBuilder(
                                     tween: Tween(begin: 0.0, end: 1.0),
                                     duration: Duration(seconds: 3),
@@ -445,7 +446,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     setState(() {});
                   },
                   onAnother: () {
-                    vehicleProvider.clearVehicleNumbers();
+                    final vehicleProvider = Provider.of<VehicleNumberProvider>(
+                        context,
+                        listen: false);
+
+                    if (vehicleProvider.lastVehicleNumber != null) {
+                      vehicleProvider
+                          .removeVehicle(vehicleProvider.lastVehicleNumber!);
+                    }
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -453,7 +461,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                   onClose: () {
-                    vehicleProvider.clearVehicleNumbers();
+                    final vehicleProvider = Provider.of<VehicleNumberProvider>(
+                        context,
+                        listen: false);
+
+                    if (vehicleProvider.lastVehicleNumber != null) {
+                      vehicleProvider
+                          .removeVehicle(vehicleProvider.lastVehicleNumber!);
+                    }
                     setState(() {});
                   },
                 ),
@@ -473,21 +488,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 RideMenu(
                   selectedVehicle: selectedVehicle!,
                   onClose: _closeRideMenu,
-                  onEndRide: () {},
+                  onEndRide: () {
+                    setState(() {
+                      selectedVehicle = null;
+                      showRideMenu = false;
+                    });
+                  },
                   onParkingComplete: _switchToParking,
                 ),
               if (isParking && selectedVehicle != null)
                 ParkingMenu(
                   selectedVehicle: selectedVehicle!,
                   onClose: _closeParkingMenu,
-                  onEndRide: () {},
+                  onEndRide: () {
+                    setState(() {
+                      selectedVehicle = null;
+                      isParking = false;
+                    });
+                  },
                   onParkingComplete: _switchToParking,
                   onKeepRiding: () {
                     vehicleProvider.unparkVehicle(selectedVehicle ?? "");
                     _switchToRide();
                   },
                 ),
-              if (vehicleProvider.vehicleNumbers.isEmpty && !showRideMenu)
+              if (vehicleProvider.vehicleNumbers.isEmpty &&
+                  !showRideMenu &&
+                  !isParking)
                 ScanQRButton(),
             ],
           );

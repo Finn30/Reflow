@@ -121,6 +121,7 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
         Future.delayed(Duration(seconds: 2), () {
           if (!isCancelled) {
             Navigator.of(context).pop();
+            widget.onEndRide();
             Navigator.push(
               context,
               MaterialPageRoute(

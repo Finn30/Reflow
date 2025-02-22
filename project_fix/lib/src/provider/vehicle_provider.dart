@@ -51,4 +51,17 @@ class VehicleNumberProvider with ChangeNotifier {
     _isUnlocked = false;
     notifyListeners();
   }
+
+  void removeVehicle(String vehicleNumber) {
+    _vehicleNumbers.remove(vehicleNumber);
+    _parkedVehicles.remove(vehicleNumber);
+
+    // Jika kendaraan yang dihapus adalah kendaraan terakhir yang dipilih, reset lastVehicleNumber
+    if (_lastVehicleNumber == vehicleNumber) {
+      _lastVehicleNumber =
+          _vehicleNumbers.isNotEmpty ? _vehicleNumbers.last : null;
+    }
+
+    notifyListeners();
+  }
 }
