@@ -373,7 +373,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               if (!vehicleProvider.isUnlocked &&
                   vehicleProvider.lastVehicleNumber != null &&
-                  vehicleProvider.vehicleNumbers.isNotEmpty &&
                   !showRideMenu)
                 VehicleUnlockMenu(
                   vehicleNumber: vehicleProvider.lastVehicleNumber!,
@@ -458,7 +457,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     setState(() {});
                   },
                 ),
-              if (!showRideMenu && !isParking)
+              if (!showRideMenu &&
+                  !isParking &&
+                  vehicleProvider.vehicleNumbers.isNotEmpty &&
+                  vehicleProvider.isUnlocked)
                 VehicleMenu(
                   onVehicleSelected: (vehicle) {
                     _selectVehicle(vehicle, vehicleProvider);
