@@ -111,6 +111,89 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
     );
   }
 
+  void _showEndRidePopup(BuildContext context) {
+    isCancelled = false;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          if (!isCancelled) {
+            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    EndRideScreen(vehicleNumber: widget.selectedVehicle),
+              ),
+            );
+          }
+        });
+
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(20),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          content: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    "Lock",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Gif(
+                    controller: _gifController,
+                    duration: Duration(seconds: 2),
+                    autostart: Autostart.loop,
+                    image: AssetImage("assets/animation/lock.gif"),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Park bicycles according to regulations",
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Manual lock ",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        TextSpan(text: "Temporary parking available"),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    isCancelled = true;
+                    Navigator.of(context)
+                        .pop(); // Tutup popup, tetap di RideMenu
+                  },
+                  child: Icon(Icons.close, color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -337,13 +420,7 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                       child: ElevatedButton(
                         onPressed: () {
                           // Navigate to EndRideScreen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EndRideScreen(
-                                  vehicleNumber: widget.selectedVehicle),
-                            ),
-                          );
+                          _showEndRidePopup(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
