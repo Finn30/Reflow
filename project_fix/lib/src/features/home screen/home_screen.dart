@@ -376,79 +376,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   !showRideMenu)
                 VehicleUnlockMenu(
                   vehicleNumber: vehicleProvider.lastVehicleNumber!,
-                  onUnlock: () async {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  SizedBox(height: 200),
-                                  TweenAnimationBuilder(
-                                    tween: Tween(begin: 0.0, end: 1.0),
-                                    duration: Duration(seconds: 3),
-                                    builder: (context, double value, child) {
-                                      return SizedBox(
-                                        width: 150,
-                                        height: 150,
-                                        child: CircularProgressIndicator(
-                                          value: value,
-                                          strokeWidth: 20,
-                                          color: Colors.blue,
-                                          backgroundColor: Colors.grey[300],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  Image.asset(
-                                    "assets/img/bicycle.png",
-                                    height: 100,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 24),
-                              Text(
-                                "${vehicleProvider.lastVehicleNumber}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Unlocking",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Timeout in 3 seconds",
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                    await Future.delayed(Duration(seconds: 3));
-                    Navigator.of(context).pop();
+                  onUnlock: () {
                     vehicleProvider.unlockVehicle();
                     setState(() {});
                   },
                   onAnother: () {
-                    final vehicleProvider = Provider.of<VehicleNumberProvider>(
-                        context,
-                        listen: false);
+                    final vehicleProvider =
+                        Provider.of<VehicleNumberProvider>(context);
 
                     if (vehicleProvider.lastVehicleNumber != null) {
                       vehicleProvider
@@ -465,11 +399,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         listen: false);
 
-                    if (vehicleProvider.lastVehicleNumber != null) {
-                      vehicleProvider
-                          .removeVehicle(vehicleProvider.lastVehicleNumber!);
-                    }
-                    setState(() {});
+                    // if (vehicleProvider.lastVehicleNumber != null) {
+                    vehicleProvider
+                        .removeVehicle(vehicleProvider.lastVehicleNumber!);
+                    // }
+                    // setState(() {});
                   },
                 ),
               if (!showRideMenu &&
