@@ -3,31 +3,34 @@ import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'package:provider/provider.dart';
 
 class EndRideScreen extends StatelessWidget {
-  final String vehicleNumber;
-
-  const EndRideScreen({Key? key, required this.vehicleNumber})
-      : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('End Ride'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Menghapus hanya kendaraan yang diakhiri dari daftar
-            Provider.of<VehicleNumberProvider>(context, listen: false)
-                .removeVehicle(vehicleNumber);
+    final endedVehicles =
+        Provider.of<VehicleNumberProvider>(context).endedVehicles;
 
-            // Kembali ke layar sebelumnya
-            Navigator.pop(context, true);
-          },
+    return Scaffold(
+      appBar: AppBar(title: Text("End Ride")),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("End Ride Summary",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: endedVehicles.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(Icons.directions_bike),
+                    title: Text("Vehicle Number: ${endedVehicles[index]}"),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-      ),
-      body: Center(
-        child: Text('End Ride for Vehicle: $vehicleNumber'),
       ),
     );
   }

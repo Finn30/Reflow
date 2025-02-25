@@ -32,6 +32,12 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
     _gifController = GifController(vsync: this);
   }
 
+  @override
+  void dispose() {
+    _gifController.dispose();
+    super.dispose();
+  }
+
   void _showParkingPopup(BuildContext context) {
     isCancelled = false;
 
@@ -120,15 +126,26 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
       builder: (BuildContext context) {
         Future.delayed(Duration(seconds: 2), () {
           if (!isCancelled) {
+            Provider.of<VehicleNumberProvider>(context, listen: false)
+                .endRide(widget.selectedVehicle);
             Navigator.of(context).pop();
             widget.onEndRide();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    EndRideScreen(vehicleNumber: widget.selectedVehicle),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) =>
+            //         EndRideScreen(vehicleNumber: widget.selectedVehicle),
+            //   ),
+            // );
+            if (Provider.of<VehicleNumberProvider>(context, listen: false)
+                .allVehiclesEnded()) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EndRideScreen(),
+                ),
+              );
+            }
           }
         });
 
