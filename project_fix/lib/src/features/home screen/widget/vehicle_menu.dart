@@ -159,7 +159,7 @@ class VehicleMenu extends StatelessWidget {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children:
-                                      provider.vehicleNumbers.map((number) {
+                                      provider.unlockedVehicles.map((number) {
                                     bool isParked =
                                         provider.isVehicleParked(number);
                                     bool isSelected =
@@ -236,7 +236,7 @@ class VehicleMenu extends StatelessWidget {
                                       text: 'A total of ',
                                       style: TextStyle(color: Colors.black)),
                                   TextSpan(
-                                      text: provider.vehicleNumbers.length
+                                      text: provider.unlockedVehicles.length
                                           .toString(),
                                       style: TextStyle(color: Colors.blue)),
                                   TextSpan(

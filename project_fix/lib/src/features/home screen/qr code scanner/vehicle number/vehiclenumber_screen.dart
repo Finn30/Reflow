@@ -157,7 +157,7 @@ class _VehicleNumberScreenState extends State<VehicleNumberScreen> {
                         // Set nomor kendaraan menggunakan Provider
                         Provider.of<VehicleNumberProvider>(context,
                                 listen: false)
-                            .addVehicleNumber(vehicleNumber);
+                            .addLockedVehicle(vehicleNumber);
 
                         // Navigasi ke HomeScreen
                         Navigator.pushReplacement(

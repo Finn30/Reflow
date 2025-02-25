@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/qrcodescanner_screen.dart';
 import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -94,7 +95,21 @@ class VehicleUnlockMenu extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: onAnother,
+                            onPressed: () {
+                              final vehicleProvider =
+                                  Provider.of<VehicleNumberProvider>(context,
+                                      listen: false);
+
+                              vehicleProvider
+                                  .removeLockedVehicle(vehicleNumber);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        QRCodeScannerScreen()),
+                              );
+                              onAnother();
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black,
                               shape: RoundedRectangleBorder(
@@ -143,7 +158,14 @@ class VehicleUnlockMenu extends StatelessWidget {
                 top: -8,
                 right: -8,
                 child: GestureDetector(
-                  onTap: onClose,
+                  onTap: () {
+                    final vehicleProvider = Provider.of<VehicleNumberProvider>(
+                        context,
+                        listen: false);
+
+                    vehicleProvider.removeLockedVehicle(vehicleNumber);
+                    onClose();
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -169,12 +191,16 @@ class VehicleUnlockMenu extends StatelessWidget {
   }
 
   void showUnlockDialog(BuildContext context, String vehicleNumber) {
+    final vehicleProvider =
+        Provider.of<VehicleNumberProvider>(context, listen: false);
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         Future.delayed(Duration(seconds: 3), () {
-          onUnlock();
+          vehicleProvider.unlockVehicle(vehicleNumber);
+          // onUnlock();
           Navigator.of(context).pop();
         });
         return AlertDialog(

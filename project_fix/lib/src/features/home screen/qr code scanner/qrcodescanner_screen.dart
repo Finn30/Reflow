@@ -65,7 +65,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
       if (scanData.code != null) {
         controller?.pauseCamera();
         Provider.of<VehicleNumberProvider>(context, listen: false)
-            .addVehicleNumber(vehicleNumber);
+            .addLockedVehicle(vehicleNumber);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),

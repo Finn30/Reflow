@@ -1,28 +1,52 @@
 import 'package:flutter/material.dart';
 
 class VehicleNumberProvider with ChangeNotifier {
-  List<String> _vehicleNumbers = [];
+  List<String> _unlockedVehicles = [];
+  List<String> _lockedVehicles = [];
   List<String> _endedVehicles = [];
   String? _lastVehicleNumber;
   Map<String, bool> _parkedVehicles = {};
   bool _isUnlocked = false;
 
-  List<String> get vehicleNumbers => _vehicleNumbers;
+  List<String> get unlockedVehicles => _unlockedVehicles;
+  List<String> get lockedVehicles => _lockedVehicles;
   List<String> get endedVehicles => _endedVehicles;
   String? get lastVehicleNumber => _lastVehicleNumber;
   bool get isUnlocked => _isUnlocked;
 
+  void addLockedVehicle(String vehicleNumber) {
+    if (!_lockedVehicles.contains(vehicleNumber)) {
+      _lockedVehicles.add(vehicleNumber);
+      notifyListeners();
+    }
+  }
+
+  void removeLockedVehicle(String vehicleNumber) {
+    _lockedVehicles.remove(vehicleNumber);
+    notifyListeners();
+  }
+
+  void unlockVehicle(String vehicleNumber) {
+    if (_lockedVehicles.contains(vehicleNumber)) {
+      _lockedVehicles.remove(vehicleNumber);
+      _unlockedVehicles.add(vehicleNumber);
+      _lastVehicleNumber = vehicleNumber;
+      _isUnlocked = true;
+      notifyListeners();
+    }
+  }
+
   void endRide(String vehicleNumber) {
-    _vehicleNumbers.remove(vehicleNumber);
+    _unlockedVehicles.remove(vehicleNumber);
     _parkedVehicles.remove(vehicleNumber);
     _endedVehicles.add(vehicleNumber);
     _lastVehicleNumber =
-        _vehicleNumbers.isNotEmpty ? _vehicleNumbers.last : null;
+        _unlockedVehicles.isNotEmpty ? _unlockedVehicles.last : null;
     notifyListeners();
   }
 
   bool allVehiclesEnded() {
-    return _vehicleNumbers.isEmpty;
+    return _unlockedVehicles.isEmpty;
   }
 
   bool isVehicleParked(String vehicleNumber) {
@@ -31,20 +55,6 @@ class VehicleNumberProvider with ChangeNotifier {
 
   void selectVehicle(String vehicleNumber) {
     _lastVehicleNumber = vehicleNumber;
-    notifyListeners();
-  }
-
-  void addVehicleNumber(String value) {
-    if (!_vehicleNumbers.contains(value)) {
-      _vehicleNumbers.add(value);
-      _lastVehicleNumber = value;
-      _isUnlocked = false;
-      notifyListeners();
-    }
-  }
-
-  void unlockVehicle() {
-    _isUnlocked = true;
     notifyListeners();
   }
 
@@ -59,7 +69,9 @@ class VehicleNumberProvider with ChangeNotifier {
   }
 
   void clearVehicleNumbers() {
-    _vehicleNumbers.clear();
+    _unlockedVehicles.clear();
+    _lockedVehicles.clear();
+    _endedVehicles.clear();
     _lastVehicleNumber = null;
     _parkedVehicles.clear();
     _isUnlocked = false;
@@ -67,13 +79,12 @@ class VehicleNumberProvider with ChangeNotifier {
   }
 
   void removeVehicle(String vehicleNumber) {
-    _vehicleNumbers.remove(vehicleNumber);
+    _unlockedVehicles.remove(vehicleNumber);
     _parkedVehicles.remove(vehicleNumber);
 
-    // Jika kendaraan yang dihapus adalah kendaraan terakhir yang dipilih, reset lastVehicleNumber
     if (_lastVehicleNumber == vehicleNumber) {
       _lastVehicleNumber =
-          _vehicleNumbers.isNotEmpty ? _vehicleNumbers.last : null;
+          _unlockedVehicles.isNotEmpty ? _unlockedVehicles.last : null;
     }
 
     notifyListeners();

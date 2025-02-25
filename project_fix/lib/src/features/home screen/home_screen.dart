@@ -371,44 +371,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   mapController = controller;
                 },
               ),
-              if (!vehicleProvider.isUnlocked &&
-                  vehicleProvider.lastVehicleNumber != null &&
-                  !showRideMenu)
+              if (vehicleProvider.lockedVehicles.isNotEmpty &&
+                  !showRideMenu &&
+                  !isParking)
                 VehicleUnlockMenu(
-                  vehicleNumber: vehicleProvider.lastVehicleNumber!,
+                  vehicleNumber: vehicleProvider.lockedVehicles.first,
                   onUnlock: () {
-                    vehicleProvider.unlockVehicle();
-                    setState(() {});
+                    vehicleProvider
+                        .unlockVehicle(vehicleProvider.lockedVehicles.first);
+                    if (vehicleProvider.lockedVehicles.isEmpty) {
+                      setState(() {});
+                    }
                   },
                   onAnother: () {
-                    final vehicleProvider =
-                        Provider.of<VehicleNumberProvider>(context);
-
-                    if (vehicleProvider.lastVehicleNumber != null) {
-                      vehicleProvider
-                          .removeVehicle(vehicleProvider.lastVehicleNumber!);
-                    }
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => QRCodeScannerScreen()),
-                    );
+                    vehicleProvider.removeLockedVehicle(
+                        vehicleProvider.lockedVehicles.first);
+                    setState(() {});
                   },
                   onClose: () {
-                    final vehicleProvider = Provider.of<VehicleNumberProvider>(
-                        context,
-                        listen: false);
-
-                    // if (vehicleProvider.lastVehicleNumber != null) {
-                    vehicleProvider
-                        .removeVehicle(vehicleProvider.lastVehicleNumber!);
-                    // }
-                    // setState(() {});
+                    vehicleProvider.removeLockedVehicle(
+                        vehicleProvider.lockedVehicles.first);
+                    setState(() {});
+                    ;
                   },
                 ),
               if (!showRideMenu &&
                   !isParking &&
-                  vehicleProvider.vehicleNumbers.isNotEmpty &&
+                  vehicleProvider.unlockedVehicles.isNotEmpty &&
+                  vehicleProvider.lockedVehicles.isEmpty &&
                   vehicleProvider.isUnlocked)
                 VehicleMenu(
                   onVehicleSelected: (vehicle) {
@@ -446,7 +436,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     _switchToRide();
                   },
                 ),
-              if (vehicleProvider.vehicleNumbers.isEmpty &&
+              if (vehicleProvider.lockedVehicles.isEmpty &&
+                  vehicleProvider.unlockedVehicles.isEmpty &&
                   !showRideMenu &&
                   !isParking)
                 ScanQRButton(),
