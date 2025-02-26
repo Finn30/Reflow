@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class VehicleNumberProvider with ChangeNotifier {
@@ -10,6 +12,9 @@ class VehicleNumberProvider with ChangeNotifier {
   String? _lastVehicleNumber;
   Map<String, bool> _parkedVehicles = {};
   bool _isUnlocked = false;
+
+  Map<String, String> _vehicleDurations = {};
+  Map<String, String> _vehicleCosts = {};
 
   List<String> get unlockedVehicles => _unlockedVehicles;
   List<String> get lockedVehicles => _lockedVehicles;
@@ -115,5 +120,25 @@ class VehicleNumberProvider with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void _generateRandomCostAndDuration(String vehicleNumber) {
+    final random = Random();
+    String duration = "${random.nextInt(60).toString().padLeft(2, '0')}:"
+        "${random.nextInt(60).toString().padLeft(2, '0')}:"
+        "${random.nextInt(60).toString().padLeft(2, '0')}";
+
+    String cost = "Rp${(random.nextDouble() * 10000).toStringAsFixed(2)}";
+
+    _vehicleDurations[vehicleNumber] = duration;
+    _vehicleCosts[vehicleNumber] = cost;
+  }
+
+  String getVehicleDuration(String vehicleNumber) {
+    return _vehicleDurations[vehicleNumber] ?? "00:00:00";
+  }
+
+  String getVehicleCost(String vehicleNumber) {
+    return _vehicleCosts[vehicleNumber] ?? "0.00";
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
+import 'package:project_fix/src/features/home%20screen/end%20ride/ride%20detail/ridedetail_screen.dart';
 import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:project_fix/src/features/home screen/end ride/endride_screen.dart';
@@ -135,12 +136,25 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
             }
             Navigator.of(context).pop();
             widget.onEndRide();
-            if (Provider.of<VehicleNumberProvider>(context, listen: false)
-                .allVehiclesEnded()) {
+            List<String> lastSessionVehicles =
+                vehicleProvider.getLastSessionVehicles();
+
+            if (lastSessionVehicles.length > 1) {
+              if (Provider.of<VehicleNumberProvider>(context, listen: false)
+                  .allVehiclesEnded()) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EndRideScreen(),
+                  ),
+                );
+              }
+            } else if (lastSessionVehicles.length == 1) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EndRideScreen(),
+                  builder: (context) => RideDetailScreen(
+                      vehicleNumber: lastSessionVehicles.first),
                 ),
               );
             }
