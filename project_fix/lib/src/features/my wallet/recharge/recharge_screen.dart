@@ -256,7 +256,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
         ),
         clipBehavior: Clip.hardEdge,
         child: Container(
-          width: 170,
+          width: MediaQuery.of(context).size.width * 0.4,
           height: 80,
           decoration: BoxDecoration(
             color: Colors.white,
