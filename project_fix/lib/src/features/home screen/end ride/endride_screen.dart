@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 class EndRideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final endedVehicles =
-        Provider.of<VehicleNumberProvider>(context).endedVehicles;
+    final lastSessionVehicles =
+        Provider.of<VehicleNumberProvider>(context).getLastSessionVehicles();
 
     return Scaffold(
       appBar: AppBar(title: Text("End Ride")),
@@ -20,11 +20,12 @@ class EndRideScreen extends StatelessWidget {
             SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
-                itemCount: endedVehicles.length,
+                itemCount: lastSessionVehicles.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: Icon(Icons.directions_bike),
-                    title: Text("Vehicle Number: ${endedVehicles[index]}"),
+                    title:
+                        Text("Vehicle Number: ${lastSessionVehicles[index]}"),
                   );
                 },
               ),

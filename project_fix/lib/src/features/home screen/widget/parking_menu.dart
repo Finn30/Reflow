@@ -129,17 +129,15 @@ class _ParkingMenuState extends State<ParkingMenu>
       builder: (BuildContext context) {
         Future.delayed(Duration(seconds: 2), () {
           if (!isCancelled) {
-            Provider.of<VehicleNumberProvider>(context, listen: false)
-                .endRide(widget.selectedVehicle);
+            var vehicleProvider =
+                Provider.of<VehicleNumberProvider>(context, listen: false);
+            vehicleProvider.endRide(widget.selectedVehicle);
+
+            if (vehicleProvider.unlockedVehicles.isEmpty) {
+              vehicleProvider.saveCurrentSession();
+            }
             Navigator.of(context).pop();
             widget.onEndRide();
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) =>
-            //         EndRideScreen(vehicleNumber: widget.selectedVehicle),
-            //   ),
-            // );
             if (Provider.of<VehicleNumberProvider>(context, listen: false)
                 .allVehiclesEnded()) {
               Navigator.push(

@@ -377,22 +377,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 VehicleUnlockMenu(
                   vehicleNumber: vehicleProvider.lockedVehicles.first,
                   onUnlock: () {
-                    vehicleProvider
-                        .unlockVehicle(vehicleProvider.lockedVehicles.first);
+                    if (vehicleProvider.lockedVehicles.isNotEmpty) {
+                      vehicleProvider
+                          .unlockVehicle(vehicleProvider.lockedVehicles.first);
+                    }
                     if (vehicleProvider.lockedVehicles.isEmpty) {
                       setState(() {});
                     }
                   },
                   onAnother: () {
-                    vehicleProvider.removeLockedVehicle(
-                        vehicleProvider.lockedVehicles.first);
-                    setState(() {});
+                    if (vehicleProvider.lockedVehicles.isNotEmpty) {
+                      vehicleProvider.removeLockedVehicle(
+                          vehicleProvider.lockedVehicles.first);
+                      setState(() {});
+                    }
                   },
                   onClose: () {
-                    vehicleProvider.removeLockedVehicle(
-                        vehicleProvider.lockedVehicles.first);
-                    setState(() {});
-                    ;
+                    if (vehicleProvider.lockedVehicles.isNotEmpty) {
+                      vehicleProvider.removeLockedVehicle(
+                          vehicleProvider.lockedVehicles.first);
+                      setState(() {});
+                    }
                   },
                 ),
               if (!showRideMenu &&

@@ -3,14 +3,20 @@ import 'package:flutter/material.dart';
 class VehicleNumberProvider with ChangeNotifier {
   List<String> _unlockedVehicles = [];
   List<String> _lockedVehicles = [];
-  List<String> _endedVehicles = [];
+
+  List<List<String>> _endedVehiclesBySession = [];
+  List<String> _currentEndedVehicles = [];
+
   String? _lastVehicleNumber;
   Map<String, bool> _parkedVehicles = {};
   bool _isUnlocked = false;
 
   List<String> get unlockedVehicles => _unlockedVehicles;
   List<String> get lockedVehicles => _lockedVehicles;
-  List<String> get endedVehicles => _endedVehicles;
+
+  List<String> get currentEndedVehicles => _currentEndedVehicles;
+  List<List<String>> get endedVehiclesBySession => _endedVehiclesBySession;
+
   String? get lastVehicleNumber => _lastVehicleNumber;
   bool get isUnlocked => _isUnlocked;
 
@@ -37,12 +43,37 @@ class VehicleNumberProvider with ChangeNotifier {
   }
 
   void endRide(String vehicleNumber) {
+    _lockedVehicles.remove(vehicleNumber);
     _unlockedVehicles.remove(vehicleNumber);
     _parkedVehicles.remove(vehicleNumber);
-    _endedVehicles.add(vehicleNumber);
+
+    if (!_currentEndedVehicles.contains(vehicleNumber)) {
+      _currentEndedVehicles.add(vehicleNumber); // Tambahkan kendaraan ke sesi
+    }
+
     _lastVehicleNumber =
         _unlockedVehicles.isNotEmpty ? _unlockedVehicles.last : null;
     notifyListeners();
+  }
+
+  void saveCurrentSession() {
+    if (_currentEndedVehicles.isNotEmpty) {
+      _endedVehiclesBySession.add(List.from(_currentEndedVehicles));
+      _currentEndedVehicles.clear();
+      notifyListeners();
+    }
+  }
+
+  void removeCurrentVehicle() {
+    _currentEndedVehicles.clear();
+    notifyListeners();
+  }
+
+  List<String> getLastSessionVehicles() {
+    if (_endedVehiclesBySession.isNotEmpty) {
+      return _endedVehiclesBySession.last;
+    }
+    return [];
   }
 
   bool allVehiclesEnded() {
@@ -69,11 +100,7 @@ class VehicleNumberProvider with ChangeNotifier {
   }
 
   void clearVehicleNumbers() {
-    _unlockedVehicles.clear();
-    _lockedVehicles.clear();
-    _endedVehicles.clear();
     _lastVehicleNumber = null;
-    _parkedVehicles.clear();
     _isUnlocked = false;
     notifyListeners();
   }
