@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project_fix/src/features/home%20screen/home_screen.dart';
 import 'package:project_fix/src/features/my%20profile/authorization%20settings/authorizationsettings_screen.dart';
 import 'package:project_fix/src/features/my%20profile/change%20password/changepassword_screen.dart';
+
 import 'package:project_fix/src/features/my%20profile/delete%20account/deleteaccount_screen.dart';
 import 'package:project_fix/src/features/welcome%20screen/welcome_screen.dart';
 import 'first name/firstname_screen.dart';
@@ -199,13 +200,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   const SizedBox(height: 20),
 
                   // Personal Information Section
-                  _buildInfoField('First Name', '${userData['firstName']}'),
-                  _buildInfoField('Last Name', '${userData['lastName']}'),
+                  _buildInfoField('Full name', '${userData['firstName']}'),
                   _buildInfoField('Gender', '${userData['gender']}'),
+                  _buildInfoField('Age', '50'),
                   _buildInfoField('Phone Number', '${userData['phone']}'),
                   _buildInfoField('Email', '${userData['email']}'),
+                  _buildInfoField('Nationality', 'Indonesia'),
+                  _buildInfoField('Vehicle Ownership', 'Motorcycle/Gasoline'),
+                  _buildActionButton(
+                    text: 'Real-Name authentication',
+                    icon: Icons.verified_user,
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChangePasswordScreen()),
+                      );
 
-                  const SizedBox(height: 30),
+                    }, 
+                  ),
+
+                  
+
+                  const SizedBox(height: 5),
 
                   // Account Management Section
                   _buildActionButton(
@@ -377,3 +394,4 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 }
+
