@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:project_fix/src/features/my%20profile/authorization%20settings/authorizationsettings_screen.dart';
 import 'package:project_fix/src/features/my%20profile/change%20password/changepassword_screen.dart';
 import 'package:project_fix/src/features/my%20profile/delete%20account/deleteaccount_screen.dart';
+import 'package:project_fix/src/features/my%20profile/nationality/nationality_screen.dart';
 import 'package:project_fix/src/features/my%20profile/pop%20up/age_popup.dart';
 import 'package:project_fix/src/features/my%20profile/pop%20up/fullname_popup.dart';
 import 'package:project_fix/src/features/my%20profile/pop%20up/gender_popup.dart';
+import 'package:project_fix/src/features/my%20profile/real-name%20authentication/real-nameauth_screen.dart';
+import 'package:project_fix/src/features/my%20profile/vehicle%20ownership/vehicleownership_screen.dart';
 import 'package:project_fix/src/features/welcome%20screen/welcome_screen.dart';
 import 'phone number/phonenumber_screen.dart';
 import 'email/email_screen.dart';
@@ -365,32 +368,33 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             case 'Phone number':
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const PhoneNumberScreen()),
+                MaterialPageRoute(builder: (context) => PhoneNumberScreen()),
               );
               break;
             case 'Email':
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EmailScreen()),
+                MaterialPageRoute(builder: (context) => EmailScreen()),
               );
               break;
             case 'Nationality':
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EmailScreen()),
+                MaterialPageRoute(builder: (context) => NationalityScreen()),
               );
               break;
             case 'Vehicle ownership':
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EmailScreen()),
+                MaterialPageRoute(
+                    builder: (context) => VehicleOwnershipScreen()),
               );
               break;
             case 'Real-name authentication':
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EmailScreen()),
+                MaterialPageRoute(
+                    builder: (context) => RealNameAuthentication()),
               );
               break;
             case 'Change Password':
