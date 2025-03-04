@@ -110,6 +110,9 @@ flutter:
     - assets/img/discover.png
     - assets/img/bicycle.png
     - assets/animation/lock.gif
+    - assets/img/google.png
+    - assets/img/facebook.png
+
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

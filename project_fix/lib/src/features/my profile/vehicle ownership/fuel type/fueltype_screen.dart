@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:project_fix/src/features/my%20profile/vehicle%20ownership/fuel%20type/fueltype_screen.dart';
 
-class VehicleOwnershipScreen extends StatefulWidget {
+class FueltypeScreen extends StatefulWidget {
   @override
-  _VehicleOwnershipScreenState createState() => _VehicleOwnershipScreenState();
+  _FueltypeScreenState createState() => _FueltypeScreenState();
 }
 
-class _VehicleOwnershipScreenState extends State<VehicleOwnershipScreen> {
+class _FueltypeScreenState extends State<FueltypeScreen> {
   String selectedVehicle = ''; // Default selected vehicle
 
   final List<String> vehicles = [
-    'Motorcycle',
-    '4-Wheel Car',
+    'Gasoline',
+    'Diesel',
+    'LPG',
+    'EV',
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vehicle Type'),
+        title: Text('Fuel Type'),
         centerTitle: true,
       ),
       body: ListView.builder(
@@ -35,12 +36,6 @@ class _VehicleOwnershipScreenState extends State<VehicleOwnershipScreen> {
                   setState(() {
                     selectedVehicle = vehicles[index];
                   });
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FueltypeScreen(),
-                    ),
-                  );
                 },
               ),
               Divider(
