@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:project_fix/src/constant/image_string.dart';
 import 'package:project_fix/src/constant/text_string.dart';
-import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/qrcodescanner_screen.dart';
 import 'package:project_fix/src/features/home%20screen/widget/parking_menu.dart';
 import 'package:project_fix/src/features/home%20screen/widget/ride_menu.dart';
 import 'package:project_fix/src/features/home%20screen/widget/scan_qr_button.dart';

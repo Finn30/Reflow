@@ -1,4 +1,5 @@
 class Users {
+  String? fullName;
   String? firstName;
   String? lastName;
   String? email;
@@ -7,8 +8,10 @@ class Users {
   String? gender;
   String? createdAt;
   String? pictUrl;
+  String? age;
 
   Users({
+    this.fullName,
     this.firstName,
     this.lastName,
     this.email,
@@ -17,9 +20,11 @@ class Users {
     this.gender,
     this.createdAt,
     this.pictUrl,
+    this.age,
   });
 
   Users.fromMap(Map<String, dynamic> data) {
+    fullName = data['fullName'];
     firstName = data['firstName'];
     lastName = data['lastName'];
     email = data['email'];
@@ -28,10 +33,12 @@ class Users {
     gender = data['gender'];
     createdAt = data['createdAt'];
     pictUrl = data['pictUrl'];
+    age = data['age'];
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'fullName': fullName,
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
@@ -40,6 +47,7 @@ class Users {
       'gender': gender,
       'createdAt': createdAt,
       'pictUrl': pictUrl,
+      'age': age,
     };
   }
 }

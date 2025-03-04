@@ -1,15 +1,14 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_fix/src/features/home%20screen/home_screen.dart';
 import 'package:project_fix/src/features/my%20profile/authorization%20settings/authorizationsettings_screen.dart';
 import 'package:project_fix/src/features/my%20profile/change%20password/changepassword_screen.dart';
-
 import 'package:project_fix/src/features/my%20profile/delete%20account/deleteaccount_screen.dart';
+import 'package:project_fix/src/features/my%20profile/pop%20up/age_popup.dart';
+import 'package:project_fix/src/features/my%20profile/pop%20up/fullname_popup.dart';
+import 'package:project_fix/src/features/my%20profile/pop%20up/gender_popup.dart';
 import 'package:project_fix/src/features/welcome%20screen/welcome_screen.dart';
-import 'first name/firstname_screen.dart';
-import 'last name/lastname_screen.dart';
-import 'gender/gender_screen.dart';
 import 'phone number/phonenumber_screen.dart';
 import 'email/email_screen.dart';
 import 'package:project_fix/src/function/services.dart';
@@ -139,30 +138,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       appBar: AppBar(
         title: Text('My Profile '),
         centerTitle: true,
-        // leading: IconButton(
-        //   icon: const Icon(Icons.arrow_back),
-        //   onPressed: () {
-        //     Navigator.pushReplacement(
-        //         context, MaterialPageRoute(builder: (context) => HomeScreen()));
-        //   },
-        // ),
+        backgroundColor: Colors.white,
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: fs.loadUser(email).then((value) => value ?? {}),
+      backgroundColor: Colors.grey[100],
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('user')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData || !snapshot.data!.exists) {
             return const Center(child: Text('Data tidak ditemukan.'));
           } else {
-            var userData = snapshot.data!;
+            var userData = snapshot.data!.data() as Map<String, dynamic>;
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.only(top: 0.0),
               child: Column(
                 children: [
                   // Profile Picture Section
+                  SizedBox(height: 20),
                   GestureDetector(
                     onTap: _changeProfileImage,
                     child: Stack(
@@ -195,103 +193,147 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   const SizedBox(height: 10),
                   TextButton(
                     onPressed: _changeProfileImage,
-                    child: const Text('Ganti Gambar'),
+                    child: Text(
+                      'Click to change photo',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
 
                   // Personal Information Section
-                  _buildInfoField('Full name', '${userData['firstName']}'),
-                  _buildInfoField('Gender', '${userData['gender']}'),
-                  _buildInfoField('Age', '50'),
-                  _buildInfoField('Phone Number', '${userData['phone']}'),
-                  _buildInfoField('Email', '${userData['email']}'),
-                  _buildInfoField('Nationality', 'Indonesia'),
-                  _buildInfoField('Vehicle Ownership', 'Motorcycle/Gasoline'),
-                  _buildActionButton(
-                    text: 'Real-Name authentication',
-                    icon: Icons.verified_user,
-                    onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChangePasswordScreen()),
-                      );
-
-                    }, 
+                  _buildProfileItem(
+                    context,
+                    label: 'Full name',
+                    value: '${userData['fullName'] ?? ''}',
+                    isPopup: true,
                   ),
-
-                  
-
-                  const SizedBox(height: 5),
-
-                  // Account Management Section
-                  _buildActionButton(
-                    icon: Icons.lock,
-                    text: 'Change Password',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChangePasswordScreen()),
-                      );
-                    },
+                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  _buildProfileItem(
+                    context,
+                    label: 'Gender',
+                    value: '${userData['gender'] ?? ''}',
+                    isPopup: true,
                   ),
-                  _buildActionButton(
-                    icon: Icons.security,
-                    text: 'Authorization Settings',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                AuthorizationSettingsScreen()),
-                      );
-                    },
+                  _buildProfileItem(
+                    context,
+                    label: 'Age',
+                    value: '${userData['age'] ?? ''}',
+                    isPopup: true,
                   ),
-                  _buildActionButton(
-                    icon: Icons.logout,
-                    text: 'Sign Out',
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Sign Out'),
-                          content:
-                              const Text('Are you sure you want to sign out?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                fs.signOut();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WelcomeScreen()),
-                                );
-                              },
-                              child: const Text('Sign Out'),
-                            ),
-                          ],
+                  _buildProfileItem(
+                    context,
+                    label: 'Phone number',
+                    value: '${userData['phone'] ?? ''}',
+                  ),
+                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  _buildProfileItem(
+                    context,
+                    label: 'Email',
+                    value: '${userData['email'] ?? ''}',
+                  ),
+                  SizedBox(height: 10),
+                  _buildProfileItem(
+                    context,
+                    label: 'Nationality',
+                    value: '',
+                  ),
+                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  _buildProfileItem(
+                    context,
+                    label: 'Vehicle ownership',
+                    value: '',
+                  ),
+                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  _buildProfileItem(
+                    context,
+                    label: 'Real-name authentication',
+                    value: 'Unknown',
+                  ),
+                  SizedBox(height: 10),
+                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  SizedBox(height: 10),
+                  _buildProfileItem(
+                    context,
+                    label: 'Change Password',
+                    value: '',
+                  ),
+                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  _buildProfileItem(
+                    context,
+                    label: 'Authorization',
+                    value: '',
+                  ),
+                  SizedBox(height: 10),
+
+                  Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: const Center(
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      );
-                    },
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Sign Out'),
+                            content: const Text(
+                                'Are you sure you want to sign out?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  fs.signOut();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => WelcomeScreen()),
+                                  );
+                                },
+                                child: const Text('Sign Out'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  _buildActionButton(
-                    icon: Icons.delete,
-                    text: 'Delete Account',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DeleteAccountScreen()),
-                      );
-                    },
-                    isDestructive: true,
+                  SizedBox(height: 10),
+                  Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: const Center(
+                        child: Text(
+                          'Delete Account',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DeleteAccountScreen()),
+                        );
+                      },
+                    ),
                   ),
+                  SizedBox(height: 40),
                 ],
               ),
             );
@@ -301,97 +343,107 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
-  Widget _buildInfoField(String label, String value) {
-    return GestureDetector(
+  Widget _buildProfileItem(BuildContext context,
+      {required String label, required String value, bool isPopup = false}) {
+    return InkWell(
       onTap: () {
-        switch (label) {
-          case 'First Name':
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FirstNameScreen()),
-            );
-            break;
-          case 'Last Name':
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LastNameScreen()),
-            );
-            break;
-          case 'Gender':
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const GenderScreen()),
-            );
-            break;
-          case 'Phone Number':
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const PhoneNumberScreen()),
-            );
-            break;
-          case 'Email':
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const EmailScreen()),
-            );
-            break;
+        if (isPopup) {
+          switch (label) {
+            case 'Full name':
+              fullNamePopUp(context, value);
+              break;
+            case 'Gender':
+              genderPopUp(context);
+              break;
+            case 'Age':
+              agePopUp(context, value);
+              setState(() {});
+              break;
+          }
+        } else {
+          switch (label) {
+            case 'Phone number':
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const PhoneNumberScreen()),
+              );
+              break;
+            case 'Email':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EmailScreen()),
+              );
+              break;
+            case 'Nationality':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EmailScreen()),
+              );
+              break;
+            case 'Vehicle ownership':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EmailScreen()),
+              );
+              break;
+            case 'Real-name authentication':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EmailScreen()),
+              );
+              break;
+            case 'Change Password':
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChangePasswordScreen()),
+              );
+              break;
+            case 'Authorization':
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AuthorizationSettingsScreen()),
+              );
+              break;
+          }
         }
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
-            const SizedBox(height: 4),
             Row(
               children: [
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 16,
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: Colors.grey),
+                const SizedBox(width: 10),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey[400],
+                ),
               ],
             ),
-            const Divider(),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String text,
-    required VoidCallback onPressed,
-    bool isDestructive = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ListTile(
-        leading: Icon(icon, color: isDestructive ? Colors.red : Colors.blue),
-        title: Text(
-          text,
-          style: TextStyle(
-            color: isDestructive ? Colors.red : Colors.black,
-          ),
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: onPressed,
-      ),
-    );
-  }
 }
-

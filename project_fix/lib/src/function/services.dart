@@ -27,12 +27,14 @@ class FirestoreService {
       Map<String, dynamic> data = {
         'email': currentUser?.email,
         'password': hashPass,
+        'fullName': '',
         'firstName': '',
         'lastName': '',
         'gender': '',
         'phone': '',
         'createdAt': DateTime.now().toString(),
         'pictUrl': '',
+        'age': '',
       };
       await userDoc.set(data);
     } catch (e) {
@@ -40,21 +42,62 @@ class FirestoreService {
     }
   }
 
-  Future<Map<String, dynamic>?> loadUser(String email) async {
+  Future<Map<String, dynamic>> loadUser(String email) async {
     try {
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('user')
           .where('email', isEqualTo: email)
           .get();
+
       if (query.docs.isNotEmpty) {
-        return query.docs.first.data();
+        final data = query.docs.first.data();
+        return {
+          'email': data['email'] ?? "",
+          'password': data['password'] ?? "",
+          'fullName': data['fullName'] ?? "",
+          'firstName': data['firstName'] ?? "",
+          'lastName': data['lastName'] ?? "",
+          'gender': data['gender'] ?? "",
+          'phone': data['phone'] ?? "",
+          'createdAt': data['createdAt'] ?? "",
+          'pictUrl': data['pictUrl'] ?? "",
+          'age': data['age'] ?? "",
+        };
       } else {
         print("User not found");
-        return null;
+        return {};
       }
     } catch (e) {
       print("Error loading user: $e");
-      return null;
+      return {};
+    }
+  }
+
+  updateAge(String email, String newAge) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .get();
+      for (var doc in query.docs) {
+        await doc.reference.update({'age': newAge});
+      }
+    } catch (e) {
+      print("Error updating age: $e");
+    }
+  }
+
+  updateFullname(String email, String newName) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .get();
+      for (var doc in query.docs) {
+        await doc.reference.update({'fullName': newName});
+      }
+    } catch (e) {
+      print("Error updating user data: $e");
     }
   }
 
@@ -214,8 +257,10 @@ class FirestoreService {
       //production url
       // final url = Uri.parse('https://app.midtrans.com/snap/v1/transactions');
       //sandbox url
-      final url = Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions');
-      final serverKey = dotenv.env['MIDTRANS_SERVER_KEY_SANDBOX'] ?? 'Not Found';
+      final url =
+          Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions');
+      final serverKey =
+          dotenv.env['MIDTRANS_SERVER_KEY_SANDBOX'] ?? 'Not Found';
       final response = await http.post(
         url,
         headers: {
@@ -232,7 +277,6 @@ class FirestoreService {
             'first_name': userData?['firstName'],
             'last_name': userData?['lastName'],
             'phone': userData?['phone'],
-
           }
         }),
       );
@@ -251,6 +295,7 @@ class FirestoreService {
       return null;
     }
   }
+
   Future<void> topUpFirebase(String uid, int amount) async {
     try {
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
@@ -260,13 +305,12 @@ class FirestoreService {
       for (var doc in query.docs) {
         await doc.reference.update({'balance': FieldValue.increment(amount)});
       }
-
     } catch (e) {
       print("Error in topUpFirebase: $e");
     }
   }
 
-  Future<int?>getBalance(String uid) async {
+  Future<int?> getBalance(String uid) async {
     try {
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('bank')

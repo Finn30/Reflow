@@ -34,19 +34,19 @@ class WelcomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 0.0),
                       child: Image(image: AssetImage(gambarAppWhite)),
                     ),
-                    SizedBox(height: 8), 
+                    // SizedBox(height: 8),
                     Padding(
-                      padding: const EdgeInsets.only(right: 140.0), 
+                      padding: const EdgeInsets.only(right: 140.0),
                       child: Text(
-                        'By: Gridwiz E&M', 
+                        'By: Gridwiz E&M',
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14, 
-                          fontWeight: FontWeight.bold, 
-                          letterSpacing: 1.2, 
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
                         ),
                       ),
-                       ),
+                    ),
                   ],
                 ),
                 // Tombol Login dan Daftar
