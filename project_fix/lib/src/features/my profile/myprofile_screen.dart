@@ -249,10 +249,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     value: '',
                   ),
                   Divider(height: 0, thickness: 1, color: Colors.grey[200]),
-                  _buildProfileItem(
-                    context,
-                    label: 'Real-name authentication',
-                    value: 'Unknown',
+                  GestureDetector(
+                    onTap: () {
+                      // Navigasi ke halaman lain (RealNameAuthScreen)
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RealNameAuthScreen()),
+                      );
+                    },
+                    child: _buildProfileItem(
+                      context,
+                      label: 'Real-name authentication',
+                      value: 'Unknown',
+                    ),
                   ),
                   SizedBox(height: 10),
                   Divider(height: 0, thickness: 1, color: Colors.grey[200]),
@@ -394,7 +403,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => RealNameAuthentication()),
+                    builder: (context) => RealNameAuthScreen()),
               );
               break;
             case 'Change Password':
