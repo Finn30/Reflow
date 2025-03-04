@@ -38,7 +38,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<void> _validateAndChangePassword() async {
-    bool isPasswordCorrect = await fs.checkPassword(email, _currentPasswordController.text);
+    bool isPasswordCorrect =
+        await fs.checkPassword(email, _currentPasswordController.text);
 
     if (!isPasswordCorrect) {
       setState(() {
@@ -52,7 +53,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
 
     if (_formKey.currentState!.validate()) {
-      if(validatePassword(_newPasswordController.text)){
+      if (validatePassword(_newPasswordController.text)) {
         if (_newPasswordController.text == _confirmPasswordController.text) {
           await fs.updatePassword(email, _confirmPasswordController.text);
           Navigator.push(
@@ -113,7 +114,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   });
                 },
                 isValid: _isNewPasswordValid,
-                errorMessage: "Password harus mengandung huruf besar, huruf kecil, dan angka",
+                errorMessage:
+                    "Password harus mengandung huruf besar, huruf kecil, dan angka",
               ),
               const SizedBox(height: 16),
               _buildPasswordField(
@@ -130,6 +132,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               ),
               const SizedBox(height: 24),
               SizedBox(
+                height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _validateAndChangePassword,
@@ -166,7 +169,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
-              color: isValid ? Colors.transparent : Colors.red, // Ubah warna border jika tidak valid
+              color: isValid
+                  ? Colors.transparent
+                  : Colors.red, // Ubah warna border jika tidak valid
               width: 2,
             ),
           ),

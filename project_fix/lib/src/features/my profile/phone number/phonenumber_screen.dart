@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_fix/src/function/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project_fix/src/features/my%20profile/myprofile_screen.dart';
 
 class PhoneNumberScreen extends StatefulWidget {
   const PhoneNumberScreen({super.key});
@@ -38,7 +37,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 try {
                   await fs.updatePhone(email, _phoneNumberController.text);
                   Navigator.pop(context, _phoneNumberController.text);
-                  // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyProfileScreen()));
                 } catch (e) {
                   print("Error updating user data: $e");
                 }
