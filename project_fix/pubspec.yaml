@@ -54,9 +54,10 @@ dependencies:
   gif: ^2.3.0
   intl: ^0.20.2
   geocoding: ^3.0.0
+  dio: ^5.3.2
+  path_provider: ^2.1.1
+  camera: ^0.10.5+2
   country_picker: ^2.0.27
-
-  
 
 dev_dependencies:
   flutter_test:
