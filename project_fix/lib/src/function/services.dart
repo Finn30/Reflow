@@ -204,6 +204,24 @@ class FirestoreService {
     }
   }
 
+  Future<String?> getGender(String email) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _firestore
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .get();
+      if (query.docs.isNotEmpty) {
+        return query.docs.first.data()['gender'];
+      } else {
+        print("User not found");
+        return null;
+      }
+    } catch (e) {
+      print("Error getting gender: $e");
+      return null;
+    }
+  }
+
   signOut() async {
     try {
       await FirebaseAuth.instance.signOut();

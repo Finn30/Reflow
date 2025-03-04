@@ -359,7 +359,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               genderPopUp(context);
               break;
             case 'Age':
-              agePopUp(context, value);
+              agePopUp(context);
               setState(() {});
               break;
           }

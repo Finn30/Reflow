@@ -15,7 +15,7 @@ void fullNamePopUp(BuildContext context, String value) {
       return LayoutBuilder(
         builder: (context, constraints) {
           double screenWidth = MediaQuery.of(context).size.width;
-          double dialogWidth = screenWidth * 0.85; // 85% dari lebar layar
+          double dialogWidth = screenWidth * 0.85;
           double buttonHeight = 50;
 
           return StatefulBuilder(
@@ -24,15 +24,13 @@ void fullNamePopUp(BuildContext context, String value) {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                backgroundColor: Colors.white, // Background putih sesuai gambar
+                backgroundColor: Colors.white,
                 child: Container(
                   width: screenWidth,
-                  padding:
-                      EdgeInsets.all(screenWidth * 0.05), // Padding dinamis
+                  padding: EdgeInsets.all(screenWidth * 0.05),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Header dengan judul dan tombol close
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -55,12 +53,10 @@ void fullNamePopUp(BuildContext context, String value) {
                         ],
                       ),
                       const SizedBox(height: 16),
-
-                      // Input field dengan border bulat
                       Form(
                         key: _formKey,
                         child: Container(
-                          width: dialogWidth * 0.9, // 90% dari dialog width
+                          width: dialogWidth * 0.9,
                           decoration: BoxDecoration(
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(30),
@@ -68,17 +64,15 @@ void fullNamePopUp(BuildContext context, String value) {
                           child: TextFormField(
                             controller: _textController,
                             textAlign: TextAlign.center,
-                            maxLength: 20, // Batas maksimum karakter
+                            maxLength: 20,
                             onChanged: (text) {
-                              setState(
-                                  () {}); // Update UI saat pengguna mengetik
+                              setState(() {});
                             },
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 12),
-                              counterText:
-                                  "", // Hilangkan counter bawaan Flutter
+                              counterText: "",
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -90,17 +84,13 @@ void fullNamePopUp(BuildContext context, String value) {
                         ),
                       ),
                       const SizedBox(height: 8),
-
-                      // Menampilkan jumlah karakter secara real-time
                       Text(
                         "${_textController.text.length}/20",
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 16),
-
-                      // Tombol Confirm yang responsif
                       SizedBox(
-                        width: dialogWidth * 0.9, // 90% dari dialog width
+                        width: dialogWidth * 0.9,
                         height: buttonHeight,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
