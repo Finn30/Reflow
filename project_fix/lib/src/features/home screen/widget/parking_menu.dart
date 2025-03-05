@@ -148,7 +148,8 @@ class _ParkingMenuState extends State<ParkingMenu>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EndRideScreen(),
+                    builder: (context) =>
+                        EndRideScreen(sessionVehicles: lastSessionVehicles),
                   ),
                 );
               }

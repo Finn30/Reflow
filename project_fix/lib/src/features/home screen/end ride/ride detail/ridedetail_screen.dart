@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:project_fix/src/features/home%20screen/end%20ride/ride%20detail/feedback_endride/feedbackendride_screen.dart';
 
 class RideDetailScreen extends StatelessWidget {
   final String vehicleNumber;
@@ -404,7 +405,14 @@ class RideDetailScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         child: TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FeedBackEndRideScreen(),
+              ),
+            );
+          },
           child: Text(
             "Feedback",
             style: TextStyle(

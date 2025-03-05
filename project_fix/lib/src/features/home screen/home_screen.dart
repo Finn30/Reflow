@@ -189,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else {
             var userData = snapshot.data!;
             return Drawer(
+              backgroundColor: Colors.white,
               child: Column(
                 children: [
                   AppBar(

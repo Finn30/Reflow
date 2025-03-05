@@ -4,6 +4,10 @@ import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'package:provider/provider.dart';
 
 class EndRideScreen extends StatelessWidget {
+  final List<String> sessionVehicles;
+
+  EndRideScreen({required this.sessionVehicles});
+
   @override
   Widget build(BuildContext context) {
     final lastSessionVehicles =
@@ -162,9 +166,9 @@ class EndRideScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: lastSessionVehicles.length,
+                itemCount: sessionVehicles.length,
                 itemBuilder: (context, index) {
-                  String vehicleNumber = lastSessionVehicles[index];
+                  String vehicleNumber = sessionVehicles[index];
                   String duration = Provider.of<VehicleNumberProvider>(context)
                       .getVehicleDuration(vehicleNumber);
                   String cost = Provider.of<VehicleNumberProvider>(context)

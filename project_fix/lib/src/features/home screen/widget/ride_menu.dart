@@ -145,7 +145,9 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EndRideScreen(),
+                    builder: (context) => EndRideScreen(
+                      sessionVehicles: lastSessionVehicles,
+                    ),
                   ),
                 );
               }
