@@ -1,0 +1,2 @@
+D:/GEK/S-Cube/woozie/project_fix/android/app/.cxx/Debug/6u5p3l4u/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/GEK/S-Cube/woozie/project_fix/android/app/.cxx/Debug/6u5p3l4u/arm64-v8a/CMakeFiles/rebuild_cache.dir

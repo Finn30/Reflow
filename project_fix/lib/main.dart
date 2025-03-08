@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 // import 'package:project_fix/firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(); // Load environment variables first
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,7 +23,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => VehicleNumberProvider()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
   // runApp(const MyApp());
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
+          appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
           )),
       home: const WelcomeScreen(),
