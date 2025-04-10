@@ -423,75 +423,75 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           trailing: Icon(Icons.chevron_right),
                         ),
-                        ListTile(
-                          leading: Icon(Icons.luggage),
-                          title: Text('My Trip'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyTripScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
-                        Divider(),
-                        ListTile(
-                          leading: Icon(Icons.account_balance_wallet),
-                          title: Text('My Wallet'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyWalletScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.menu_book),
-                          title: Text('User Manual'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UserManualScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.directions_car),
-                          title: Text('Car Guide'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CarGuideScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.share),
-                          title: Text('Invite Friends'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        InviteFriendsScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
-                        Divider(),
-                        ListTile(
-                          leading: Icon(Icons.feedback),
-                          title: Text('Feedback'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FeedbackScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
+                        // ListTile(
+                        //   leading: Icon(Icons.luggage),
+                        //   title: Text('My Trip'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => MyTripScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
+                        // Divider(),
+                        // ListTile(
+                        //   leading: Icon(Icons.account_balance_wallet),
+                        //   title: Text('My Wallet'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => MyWalletScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
+                        // ListTile(
+                        //   leading: Icon(Icons.menu_book),
+                        //   title: Text('User Manual'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => UserManualScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
+                        // ListTile(
+                        //   leading: Icon(Icons.directions_car),
+                        //   title: Text('Car Guide'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => CarGuideScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
+                        // ListTile(
+                        //   leading: Icon(Icons.share),
+                        //   title: Text('Invite Friends'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 InviteFriendsScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
+                        // Divider(),
+                        // ListTile(
+                        //   leading: Icon(Icons.feedback),
+                        //   title: Text('Feedback'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => FeedbackScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
                         ListTile(
                           leading: Icon(Icons.info),
                           title: Text('About Us'),
@@ -503,18 +503,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           trailing: Icon(Icons.chevron_right),
                         ),
-                        ListTile(
-                          leading: Icon(Icons.language),
-                          title: Text('Language Switch'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        LanguageSwitchScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
+                        // ListTile(
+                        //   leading: Icon(Icons.language),
+                        //   title: Text('Language Switch'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 LanguageSwitchScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
                       ],
                     ),
                   ),
