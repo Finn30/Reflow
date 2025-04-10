@@ -1,0 +1,2 @@
+D:/GEK/S-Cube/Mobile-Apps/android/app/.cxx/Debug/3x191741/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/GEK/S-Cube/Mobile-Apps/android/app/.cxx/Debug/3x191741/arm64-v8a/CMakeFiles/rebuild_cache.dir

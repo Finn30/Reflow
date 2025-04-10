@@ -35,6 +35,8 @@ class FirestoreService {
         'createdAt': DateTime.now().toString(),
         'pictUrl': '',
         'age': '',
+        'userType': '',
+        'bindingID': '',
       };
       await userDoc.set(data);
     } catch (e) {

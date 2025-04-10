@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:project_fix/src/features/home%20screen/home_screen.dart';
-import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/vehicle%20number/vehiclenumber_screen.dart';
+import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/ride%20option/ride_option_dialog.dart';
+import 'package:project_fix/src/features/home%20screen/qr%20code%20scanner/vehiclenumber_screen.dart';
+import 'package:project_fix/src/features/my%20wallet/ride%20pass/ridepass_screen.dart';
 import 'package:project_fix/src/provider/vehicle_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
@@ -66,10 +68,29 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
         controller?.pauseCamera();
         Provider.of<VehicleNumberProvider>(context, listen: false)
             .addLockedVehicle(vehicleNumber);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        ); // Kembalikan hasil scan
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => HomeScreen()),
+        // ); // Kembalikan hasil scan
+        showRideOptionDialog(context, (isNormalRide) {
+          if (isNormalRide) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RidePassScreen()),
+            ).then((_) {
+              // Saat kembali dari RidePassScreen, kembali ke QRCodeScannerScreen
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => QRCodeScannerScreen()),
+              );
+            });
+          }
+        });
       }
       setState(() {
         result = scanData.code ?? "No data found"; // Handle nullable value
@@ -211,7 +232,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
                     ElevatedButton(
                       onPressed: () {
                         controller
-                            ?.pauseCamera(); // Pause camera before navigation
+                            ?.stopCamera(); // Pause camera before navigation
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

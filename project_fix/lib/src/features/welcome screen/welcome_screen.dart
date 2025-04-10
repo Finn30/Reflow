@@ -16,11 +16,14 @@ class WelcomeScreen extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Colors.blue.shade400, Colors.blue.shade900],
+          colors: [
+            const Color.fromARGB(255, 11, 80, 136),
+            const Color.fromARGB(255, 62, 133, 239)
+          ],
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(0, 175, 175, 175),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(40.0),
@@ -31,22 +34,13 @@ class WelcomeScreen extends StatelessWidget {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 0.0),
-                      child: Image(image: AssetImage(gambarAppWhite)),
-                    ),
-                    // SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 140.0),
-                      child: Text(
-                        'By: Gridwiz E&M',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
+                        padding: const EdgeInsets.only(top: 30.0),
+                        child: Image.asset(
+                          welcomeLogo,
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.contain,
+                        )),
                   ],
                 ),
                 // Tombol Login dan Daftar
@@ -65,6 +59,7 @@ class WelcomeScreen extends StatelessWidget {
                           minimumSize: Size(
                               screenWidth < 412 ? 300 : screenWidth * 0.8, 50),
                         ),
+                        
                         onPressed: () {
                           Navigator.push(
                               context,

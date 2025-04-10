@@ -10,10 +10,77 @@ class RechargeScreen extends StatefulWidget {
 
 class _RechargeScreenState extends State<RechargeScreen> {
   int selectedCardIndex = -1;
+  int selectedPackageIndex = -1;
+
   bool isCheckboxChecked = false;
+
   FirestoreService fs = FirestoreService();
+
   String email = FirebaseAuth.instance.currentUser!.email!;
   String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  List<Map<String, String>> rechargePackages = [
+    {
+      "package": "Package 1",
+      "duration": "30 Minutes",
+      "pause": "+ 10 Minutes pause",
+      "price": "Rp 10.000"
+    },
+    {
+      "package": "Package 1",
+      "duration": "35 Minutes",
+      "pause": "",
+      "price": "Rp 10.000"
+    },
+    {
+      "package": "Package 2",
+      "duration": "60 Minutes",
+      "pause": "+ 20 Minutes pause",
+      "price": "Rp 20.000"
+    },
+    {
+      "package": "Package 2",
+      "duration": "70 Minutes",
+      "pause": "",
+      "price": "Rp 20.000"
+    },
+    {
+      "package": "Package 3",
+      "duration": "90 Minutes",
+      "pause": "+ 30 Minutes pause",
+      "price": "Rp 30.000"
+    },
+    {
+      "package": "Package 3",
+      "duration": "100 Minutes",
+      "pause": "",
+      "price": "Rp 28.000"
+    },
+    {
+      "package": "Package 4",
+      "duration": "120 Minutes",
+      "pause": "+ 40 Minutes pause",
+      "price": "Rp 40.000"
+    },
+    {
+      "package": "Package 4",
+      "duration": "140 Minutes",
+      "pause": "",
+      "price": "Rp 40.000"
+    },
+    {
+      "package": "Package 5",
+      "duration": "180 Minutes",
+      "pause": "+ 60 Minutes pause",
+      "price": "Rp 60.000"
+    },
+    {
+      "package": "Package 5",
+      "duration": "210 Minutes",
+      "pause": "",
+      "price": "Rp 60.000"
+    },
+  ];
 
   List<Map<String, String>> rechargeAmounts = [
     {"amount": "1000", "gift": "Gift Rp0"},
@@ -56,6 +123,10 @@ class _RechargeScreenState extends State<RechargeScreen> {
               ),
               _buildBalanceCard(),
               SizedBox(height: 10),
+              // _buildPackageOptions(),
+              // SizedBox(height: 20),
+              // Divider(),
+              // SizedBox(height: 20),
               _buildRechargeOptions(),
               SizedBox(height: 20),
             ],
@@ -207,18 +278,136 @@ class _RechargeScreenState extends State<RechargeScreen> {
     );
   }
 
-  Widget _buildRechargeOptions() {
-    List<Map<String, String>> rechargeAmounts = [
-      {"amount": "1000", "gift": "Gift Rp0"},
-      {"amount": "5000", "gift": "Gift Rp0"},
-      {"amount": "10000", "gift": "Gift Rp0"},
-      {"amount": "15000", "gift": "Gift Rp0"},
-      {"amount": "20000", "gift": "Gift Rp0"},
-      {"amount": "30000", "gift": "Gift Rp0"},
-      {"amount": "50000", "gift": "Gift Rp1000"},
-      {"amount": "100000", "gift": "Gift Rp2000"},
-    ];
+  Widget _buildPackageOptions() {
+    return Column(
+      children: [
+        for (int i = 0; i < rechargePackages.length; i += 2)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: _buildPackageCard(rechargePackages[i], i)),
+                SizedBox(width: 12),
+                Expanded(
+                    child: _buildPackageCard(rechargePackages[i + 1], i + 1)),
+              ],
+            ),
+          )
+      ],
+    );
+  }
 
+  Widget _buildPackageCard(Map<String, String> package, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedPackageIndex = index;
+          selectedCardIndex = -1;
+        });
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                side: BorderSide(
+                  color: selectedPackageIndex == index
+                      ? Colors.blue
+                      : Colors.transparent,
+                  width: 2.0,
+                )),
+            clipBehavior: Clip.hardEdge,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.4,
+              height: 90,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Duration
+                          Text(
+                            package["duration"]!,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          // Pause
+                          if (package["pause"]!.isNotEmpty) ...[
+                            Text(
+                              package["pause"]!,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 26,
+                    alignment: Alignment.center,
+                    color: selectedPackageIndex == index
+                        ? Colors.blue
+                        : Colors.grey[300],
+                    child: Text(
+                      package["price"]!,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: selectedPackageIndex == index
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          // Label Package
+          Positioned(
+            top: -15,
+            left: 0,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+              ),
+              child: Text(
+                package["package"]!,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRechargeOptions() {
     return Column(
       children: [
         for (int i = 0; i < rechargeAmounts.length; i += 2)
@@ -243,6 +432,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
       onTap: () {
         setState(() {
           selectedCardIndex = index;
+          selectedPackageIndex = -1;
         });
       },
       child: Card(
@@ -319,6 +509,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
 
   Widget _buildBottomContainer() {
     bool isTopUpEnabled = selectedCardIndex != -1 && isCheckboxChecked;
+    bool isPackageEnabled = selectedPackageIndex != -1 && isCheckboxChecked;
 
     return SafeArea(
       child: Container(
@@ -379,7 +570,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: isTopUpEnabled
+                onPressed: isTopUpEnabled || isPackageEnabled
                     ? () {
                         fs
                             .createPaymentLinkMidtrans(
@@ -406,7 +597,9 @@ class _RechargeScreenState extends State<RechargeScreen> {
                       }
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isTopUpEnabled ? Colors.blue : Colors.grey,
+                  backgroundColor: isTopUpEnabled || isPackageEnabled
+                      ? Colors.blue
+                      : Colors.grey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),

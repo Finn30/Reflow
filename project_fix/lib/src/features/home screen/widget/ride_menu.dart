@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 import 'package:project_fix/src/features/home%20screen/end%20ride/ride%20detail/ridedetail_screen.dart';
@@ -26,6 +27,9 @@ class RideMenu extends StatefulWidget {
 class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
   late GifController _gifController;
   bool isCancelled = false;
+
+  int _counter = 30;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -145,9 +149,8 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EndRideScreen(
-                      sessionVehicles: lastSessionVehicles,
-                    ),
+                    builder: (context) =>
+                        EndRideScreen(sessionVehicles: lastSessionVehicles),
                   ),
                 );
               }
@@ -215,6 +218,142 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                     isCancelled = true;
                     Navigator.of(context)
                         .pop(); // Tutup popup, tetap di RideMenu
+                  },
+                  child: Icon(Icons.close, color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showLockPopUp(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 30), () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        });
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(20),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    "Lock",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(height: 200),
+                      TweenAnimationBuilder(
+                        tween: Tween(begin: 1.0, end: 0.0),
+                        duration: Duration(seconds: 30),
+                        builder: (context, double value, child) {
+                          return SizedBox(
+                            width: 150,
+                            height: 150,
+                            child: CircularProgressIndicator(
+                              value: value,
+                              strokeWidth: 20,
+                              color: Colors.blue,
+                              backgroundColor: Colors.grey[300],
+                            ),
+                          );
+                        },
+                      ),
+                      TweenAnimationBuilder<int>(
+                        tween: IntTween(
+                            begin: 30, end: 0), // Angka mundur dari 30 ke 0
+                        duration: const Duration(seconds: 30),
+                        builder: (context, value, child) {
+                          return Text(
+                            '$value',
+                            style: const TextStyle(
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _showParkingPopup(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            minimumSize: Size(0, 50),
+                          ),
+                          child: Text(
+                            "Parking",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            // Navigate to EndRideScreen
+                            _showEndRidePopup(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            minimumSize: Size(0, 50),
+                          ),
+                          child: Text(
+                            "End ride",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    isCancelled = true;
+                    Navigator.of(context).pop();
                   },
                   child: Icon(Icons.close, color: Colors.black),
                 ),
@@ -422,6 +561,20 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
+                // SizedBox(height: 18),
+                // GestureDetector(
+                //   onTap: () {
+                //     _showLockPopUp(context);
+                //   },
+                //   child: Text(
+                //     "Lock the bicycle to parking or end the ride",
+                //     style: TextStyle(
+                //       fontSize: 12,
+                //       color: Colors.grey,
+                //     ),
+                //     textAlign: TextAlign.center,
+                //   ),
+                // ),
                 SizedBox(height: 18),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

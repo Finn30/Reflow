@@ -526,6 +526,22 @@ class _ParkingMenuState extends State<ParkingMenu>
                       ),
                     ),
                     SizedBox(width: 16),
+                    // Expanded(
+                    //   child: GestureDetector(
+                    //     onTap: () {
+                    //       _showEndRidePopup(context);
+                    //     },
+                    //     child: Text(
+                    //       "Lock the bicycle to end the ride",
+                    //       style: TextStyle(
+                    //         fontSize: 12,
+                    //         color: Colors.grey,
+                    //       ),
+                    //       softWrap: true,
+                    //       textAlign: TextAlign.center,
+                    //     ),
+                    //   ),
+                    // ),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -550,6 +566,26 @@ class _ParkingMenuState extends State<ParkingMenu>
                     ),
                   ],
                 ),
+                // SizedBox(height: 8),
+                // Padding(
+                //   padding: EdgeInsets.all(6),
+                //   child: Expanded(
+                //     child: GestureDetector(
+                //       onTap: () {
+                //         _showEndRidePopup(context);
+                //       },
+                //       child: Text(
+                //         "Lock the bicycle to end the ride",
+                //         style: TextStyle(
+                //           fontSize: 12,
+                //           color: Colors.grey,
+                //         ),
+                //         softWrap: true,
+                //         textAlign: TextAlign.center,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

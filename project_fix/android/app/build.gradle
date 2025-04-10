@@ -5,12 +5,19 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+def dotenv = new Properties()
+def dotenvFile = rootProject.file(".env")
+if (dotenvFile.exists()) {
+    dotenv.load(new FileInputStream(dotenvFile))
+}
+
 android {
     namespace = "com.example.project_fix"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "29.0.13113456"
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -20,11 +27,13 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId = "com.example.project_fix"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 33  // Updated to API level 33
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = dotenv.getProperty("GOOGLE_MAPS_API_KEY", "")
     }
 
     buildTypes {
@@ -41,4 +50,7 @@ flutter {
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }

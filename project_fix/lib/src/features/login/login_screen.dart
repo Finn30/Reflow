@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:project_fix/src/constant/image_string.dart';
 import 'package:project_fix/src/features/home%20screen/home_screen.dart';
 import 'package:project_fix/src/features/login/lupa%20kata%20sandi/lupakatasandi_screen.dart';
+import 'package:project_fix/src/features/my%20profile/real-name%20authentication/real-nameauth_screen.dart';
 import 'package:project_fix/src/features/register/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,6 +24,47 @@ class _LoginScreenState extends State<LoginScreen> {
   String activeIcon = '';
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // void login() async {
+  //   try {
+  //     final input = inputController.text.trim();
+  //     final password = passwordController.text;
+
+  //     if (input.isEmpty || password.isEmpty) {
+  //       showError("Email atau Kata Sandi tidak boleh kosong.");
+  //       return;
+  //     }
+  //     final usersCollection = FirebaseFirestore.instance.collection('user');
+  //     final querySnapshot =
+  //         await usersCollection.where('email', isEqualTo: input).get();
+
+  //     if (querySnapshot.docs.isEmpty) {
+  //       showError("Email tidak terdaftar. Silakan daftar terlebih dahulu.");
+  //       return;
+  //     }
+  //     final userDoc = querySnapshot.docs.first;
+  //     final userData = userDoc.data();
+  //     final hashedCurrPassword =
+  //         sha256.convert(utf8.encode(password)).toString();
+
+  //     // Memeriksa kecocokan password
+  //     if (userData['password'] == hashedCurrPassword) {
+  //       await _auth.signInWithEmailAndPassword(
+  //         email: input,
+  //         password: password,
+  //       );
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => HomeScreen()),
+  //       );
+  //     } else {
+  //       showError("Password salah. Silakan coba lagi.");
+  //       return;
+  //     }
+  //   } catch (e) {
+  //     showError("Terjadi kesalahan: $e");
+  //   }
+  // }
+
   void login() async {
     try {
       final input = inputController.text.trim();
@@ -32,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
         showError("Email atau Kata Sandi tidak boleh kosong.");
         return;
       }
+
       final usersCollection = FirebaseFirestore.instance.collection('user');
       final querySnapshot =
           await usersCollection.where('email', isEqualTo: input).get();
@@ -40,27 +83,195 @@ class _LoginScreenState extends State<LoginScreen> {
         showError("Email tidak terdaftar. Silakan daftar terlebih dahulu.");
         return;
       }
+
       final userDoc = querySnapshot.docs.first;
       final userData = userDoc.data();
       final hashedCurrPassword =
           sha256.convert(utf8.encode(password)).toString();
 
-      // Memeriksa kecocokan password
       if (userData['password'] == hashedCurrPassword) {
         await _auth.signInWithEmailAndPassword(
-          email: input,
-          password: password,
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+            email: input, password: password);
+
+        // Cek apakah pengguna sudah memilih Student/Public sebelumnya
+        if (userData.containsKey('userType')) {
+          navigateBasedOnUserType(
+              userData['userType'], userData['bindingID'] ?? false);
+        } else {
+          showUserTypeDialog(userDoc.id);
+        }
       } else {
         showError("Password salah. Silakan coba lagi.");
-        return;
       }
     } catch (e) {
       showError("Terjadi kesalahan: $e");
+    }
+  }
+
+  void showUserTypeDialog(String userId) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          icon: Icon(Icons.person, color: Colors.black, size: 50),
+          title: Text("Select User Type"),
+          backgroundColor: Colors.white,
+          content: Text(
+            "Please select whether you are Student or Public.",
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      saveUserTypeAndNavigate(userId, 'student', true);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.yellow[900],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        minimumSize: Size(0, 50)),
+                    child: Text(
+                      "Student",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      showBindingIDDialog(userId);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      minimumSize: Size(0, 50),
+                    ),
+                    child: Text(
+                      "Public",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showBindingIDDialog(String userId) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          icon: Icon(Icons.card_membership, color: Colors.black, size: 50),
+          title: Text("Binding ID Card"),
+          content:
+              Text("Do you want to bind ID card?", textAlign: TextAlign.center),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      saveUserTypeAndNavigate(userId, 'public', true);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        minimumSize: Size(0, 50)),
+                    child: Text(
+                      "Yes",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      saveUserTypeAndNavigate(userId, 'public', false);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      minimumSize: Size(0, 50),
+                    ),
+                    child: Text(
+                      "No",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // TextButton(
+            //   onPressed: () {
+            //     saveUserTypeAndNavigate(userId, 'public', true);
+            //   },
+            //   child: Text("Ya"),
+            // ),
+            // TextButton(
+            //   onPressed: () {
+            //     saveUserTypeAndNavigate(userId, 'public', false);
+            //   },
+            //   child: Text("Tidak"),
+            // ),
+          ],
+        );
+      },
+    );
+  }
+
+  void saveUserTypeAndNavigate(
+      String userId, String userType, bool bindingID) async {
+    await FirebaseFirestore.instance.collection('user').doc(userId).update({
+      'userType': userType,
+      'bindingID': bindingID,
+    });
+
+    navigateBasedOnUserType(userType, bindingID);
+  }
+
+  void navigateBasedOnUserType(String userType, bool bindingID) {
+    if (userType == 'student' || (userType == 'public' && bindingID)) {
+      Navigator.pushReplacement(
+          context,
+          // MaterialPageRoute(builder: (context) => RealNameAuthScreen()));
+          MaterialPageRoute(builder: (context) => HomeScreen()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
   }
 
@@ -109,10 +320,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           // Gambar
                           Image(
-                            image: AssetImage(gambarApp),
+                            image: AssetImage(welcomeLogoWhite),
                             height: 200,
+                            width: 220,
+                            fit: BoxFit.contain,
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           // Input Email atau Telepon
                           if (!useEmail)
                             Container(
@@ -130,7 +343,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       return DropdownMenuItem(
                                         value: code,
                                         child: Text(code,
-                                            style: TextStyle(fontSize: 16)),
+                                            style: TextStyle(fontSize: 12)),
                                       );
                                     }).toList(),
                                     onChanged: (value) {},
@@ -149,6 +362,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                         border: InputBorder.none,
                                         hintText:
                                             'Silakan masukkan nomor telepon',
+                                        hintStyle: TextStyle(
+                                          fontSize:
+                                              12, // Ukuran font lebih kecil untuk hint text
+                                          color: Colors.grey[
+                                              650], // Warna hint text lebih lembut
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -181,6 +400,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         hintText: 'Silakan masukkan email',
+                                        hintStyle: TextStyle(
+                                          fontSize:
+                                              12, // Ukuran font lebih kecil untuk hint text
+                                          color: Colors.grey[
+                                              650], // Warna hi
+                                      ),
                                       ),
                                     ),
                                   ),
@@ -193,7 +418,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                               ),
                             ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           // Input Kata Sandi
                           Container(
                             decoration: BoxDecoration(
@@ -219,10 +444,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 border: InputBorder.none,
                                 hintText: 'Silakan masukkan kata sandi',
+                                hintStyle: TextStyle(
+                                          fontSize:
+                                              12, // Ukuran font lebih kecil untuk hint text
+                                          color: Colors.grey[
+                                              650], // Warna hi
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 16),
                           // Perjanjian Pengguna
                           Row(
                             children: [
@@ -236,8 +467,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   alignment: Alignment.center,
                                   children: [
                                     Container(
-                                      width: 24,
-                                      height: 24,
+                                      width: 20,
+                                      height: 20,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
@@ -248,8 +479,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     Container(
-                                      width: 16,
-                                      height: 16,
+                                      width: 12,
+                                      height: 12,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: isChecked
@@ -285,7 +516,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           // Tombol Login
                           SizedBox(
                             width: double.infinity,
@@ -318,7 +549,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                 },
                                 child: Text("Daftar",
-                                    style: TextStyle(color: Colors.blue)),
+                                    style: TextStyle(color: Colors.blue, fontSize: 12), ),
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -330,7 +561,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                 },
                                 child: Text("Lupa kata sandi?",
-                                    style: TextStyle(color: Colors.grey[700])),
+                                    style: TextStyle(color: Colors.grey[700], fontSize: 12)),
                               ),
                             ],
                           ),
@@ -358,7 +589,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: IconButton(
                           icon: Icon(
                             Icons.phone,
-                            size: 40,
+                            size: 25,
                           ),
                           color: activeIcon == 'phone'
                               ? Colors.blue
@@ -384,7 +615,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: IconButton(
                           icon: Icon(
                             Icons.email,
-                            size: 40,
+                            size: 25,
                           ),
                           color: activeIcon == 'email'
                               ? Colors.blue

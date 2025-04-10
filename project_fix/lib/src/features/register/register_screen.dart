@@ -167,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             items: ['+62', '+1', '+44', '+91', '+81'].map((code) {
               return DropdownMenuItem(
                 value: code,
-                child: Text(code, style: TextStyle(fontSize: 16)),
+                child: Text(code, style: TextStyle(fontSize: 12)),
               );
             }).toList(),
             onChanged: (value) {},
@@ -184,6 +184,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Masukkan nomor telepon',
+                hintStyle: TextStyle(
+                  fontSize: 12, // Ukuran font lebih kecil untuk hint text
+                  color: Colors.grey[650], // Warna hint text lebih lembut
+                ),
               ),
             ),
           ),
@@ -219,6 +223,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Masukkan email',
+                    hintStyle: TextStyle(
+                      fontSize: 12, // Ukuran font lebih kecil untuk hint text
+                      color: Colors.grey[650], // Warna hint text lebih lembut
+                    ),
                   ),
                 ),
               ),
@@ -260,6 +268,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Masukkan kode verifikasi',
+                hintStyle: TextStyle(
+                  fontSize: 12, // Ukuran font lebih kecil untuk hint text
+                  color: Colors.grey[650], // Warna hint text lebih lembut
+                ),
               ),
             ),
           ),
