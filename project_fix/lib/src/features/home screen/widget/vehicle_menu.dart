@@ -57,56 +57,56 @@ class VehicleMenu extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text.rich(
-                                      TextSpan(
-                                        style: TextStyle(color: Colors.white),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: "Rp",
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                          TextSpan(
-                                            text: "0",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 12),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.currency_yen_rounded,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          "Total ride cost",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Container(
-                                width: 1,
-                                height: 40,
-                                color: Colors.white.withOpacity(0.7),
-                              ),
+                              // Expanded(
+                              //   child: Column(
+                              //     mainAxisAlignment: MainAxisAlignment.center,
+                              //     crossAxisAlignment: CrossAxisAlignment.center,
+                              //     children: [
+                              //       Text.rich(
+                              //         TextSpan(
+                              //           style: TextStyle(color: Colors.white),
+                              //           children: <TextSpan>[
+                              //             TextSpan(
+                              //               text: "Rp",
+                              //               style: TextStyle(fontSize: 16),
+                              //             ),
+                              //             TextSpan(
+                              //               text: "0",
+                              //               style: TextStyle(
+                              //                 fontSize: 20,
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //       SizedBox(height: 12),
+                              //       Row(
+                              //         mainAxisAlignment:
+                              //             MainAxisAlignment.center,
+                              //         children: [
+                              //           Icon(
+                              //             Icons.currency_yen_rounded,
+                              //             color: Colors.white,
+                              //           ),
+                              //           SizedBox(width: 4),
+                              //           Text(
+                              //             "Total ride cost",
+                              //             style: TextStyle(
+                              //               color: Colors.white,
+                              //               fontSize: 16,
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
+                              // SizedBox(width: 8),
+                              // Container(
+                              //   width: 1,
+                              //   height: 40,
+                              //   color: Colors.white.withOpacity(0.7),
+                              // ),
                               SizedBox(width: 8),
                               Expanded(
                                 child: Column(

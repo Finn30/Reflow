@@ -68,29 +68,29 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
         controller?.pauseCamera();
         Provider.of<VehicleNumberProvider>(context, listen: false)
             .addLockedVehicle(vehicleNumber);
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => HomeScreen()),
-        // ); // Kembalikan hasil scan
-        showRideOptionDialog(context, (isNormalRide) {
-          if (isNormalRide) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            );
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RidePassScreen()),
-            ).then((_) {
-              // Saat kembali dari RidePassScreen, kembali ke QRCodeScannerScreen
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => QRCodeScannerScreen()),
-              );
-            });
-          }
-        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        ); // Kembalikan hasil scan
+        // showRideOptionDialog(context, (isNormalRide) {
+        //   if (isNormalRide) {
+        //     Navigator.pushReplacement(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => HomeScreen()),
+        //     );
+        //   } else {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => RidePassScreen()),
+        //     ).then((_) {
+        //       // Saat kembali dari RidePassScreen, kembali ke QRCodeScannerScreen
+        //       Navigator.pushReplacement(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => QRCodeScannerScreen()),
+        //       );
+        //     });
+        //   }
+        // });
       }
       setState(() {
         result = scanData.code ?? "No data found"; // Handle nullable value

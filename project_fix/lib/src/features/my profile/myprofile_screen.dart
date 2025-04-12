@@ -237,46 +237,47 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     value: '${userData['email'] ?? ''}',
                   ),
                   SizedBox(height: 10),
-                  _buildProfileItem(
-                    context,
-                    label: 'Nationality',
-                    value: '',
-                  ),
-                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
-                  _buildProfileItem(
-                    context,
-                    label: 'Vehicle ownership',
-                    value: '',
-                  ),
-                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
-                  GestureDetector(
-                    onTap: () {
-                      // Navigasi ke halaman lain (RealNameAuthScreen)
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RealNameAuthScreen()),
-                      );
-                    },
-                    child: _buildProfileItem(
-                      context,
-                      label: 'Real-name authentication',
-                      value: 'Unknown',
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
-                  SizedBox(height: 10),
+                  // _buildProfileItem(
+                  //   context,
+                  //   label: 'Nationality',
+                  //   value: '',
+                  // ),
+                  // Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  // _buildProfileItem(
+                  //   context,
+                  //   label: 'Vehicle ownership',
+                  //   value: '',
+                  // ),
+                  // Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     // Navigasi ke halaman lain (RealNameAuthScreen)
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => RealNameAuthScreen()),
+                  //     );
+                  //   },
+                  //   child: _buildProfileItem(
+                  //     context,
+                  //     label: 'Real-name authentication',
+                  //     value: 'Unknown',
+                  //   ),
+                  // ),
+                  // SizedBox(height: 10),
+                  // Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  // SizedBox(height: 10),
                   _buildProfileItem(
                     context,
                     label: 'Change Password',
                     value: '',
                   ),
-                  Divider(height: 0, thickness: 1, color: Colors.grey[200]),
-                  _buildProfileItem(
-                    context,
-                    label: 'Authorization',
-                    value: '',
-                  ),
+                  // Divider(height: 0, thickness: 1, color: Colors.grey[200]),
+                  // _buildProfileItem(
+                  //   context,
+                  //   label: 'Authorization',
+                  //   value: '',
+                  // ),
                   SizedBox(height: 10),
 
                   Container(
@@ -402,8 +403,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             case 'Real-name authentication':
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => RealNameAuthScreen()),
+                MaterialPageRoute(builder: (context) => RealNameAuthScreen()),
               );
               break;
             case 'Change Password':

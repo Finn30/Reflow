@@ -423,18 +423,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           trailing: Icon(Icons.chevron_right),
                         ),
-                        // ListTile(
-                        //   leading: Icon(Icons.luggage),
-                        //   title: Text('My Trip'),
-                        //   onTap: () {
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) => MyTripScreen()));
-                        //   },
-                        //   trailing: Icon(Icons.chevron_right),
-                        // ),
-                        // Divider(),
+                        ListTile(
+                          leading: Icon(Icons.luggage),
+                          title: Text('My Trip'),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyTripScreen()));
+                          },
+                          trailing: Icon(Icons.chevron_right),
+                        ),
+                        Divider(),
                         // ListTile(
                         //   leading: Icon(Icons.account_balance_wallet),
                         //   title: Text('My Wallet'),
@@ -778,92 +778,100 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-              // Search Button
-              Obx(
-                () => Positioned(
-                  bottom: () {
-                    if (mapController.isBikeMarkerSelected.value) {
-                      return 350.0;
-                    } else if (showRouteOverlay) {
-                      return 400.0;
-                    } else {
-                      return 150.0;
-                    }
-                  }(),
-                  right: 10,
-                  child: FloatingActionButton(
-                    mini: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    backgroundColor: Colors.white,
-                    onPressed: _toggleSearchBar,
-                    child: Icon(
-                      Icons.route_outlined,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              // My Location Button
-              Obx(
-                () => Positioned(
-                  bottom: () {
-                    if (mapController.isBikeMarkerSelected.value) {
-                      return 300.0;
-                    } else if (showRouteOverlay) {
-                      return 350.0;
-                    } else {
-                      return 100.0;
-                    }
-                  }(),
-                  right: 10,
-                  child: FloatingActionButton(
-                    mini: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    backgroundColor: Colors.white,
-                    onPressed: _getUserLocation,
-                    child: Icon(
-                      Icons.telegram,
-                      color: Colors.black,
+              if (vehicleProvider.lockedVehicles.isEmpty &&
+                  vehicleProvider.unlockedVehicles.isEmpty &&
+                  !showRideMenu &&
+                  !isParking)
+                // Search Button
+                Obx(
+                  () => Positioned(
+                    bottom: () {
+                      if (mapController.isBikeMarkerSelected.value) {
+                        return 350.0;
+                      } else if (showRouteOverlay) {
+                        return 400.0;
+                      } else {
+                        return 150.0;
+                      }
+                    }(),
+                    right: 10,
+                    child: FloatingActionButton(
+                      mini: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      backgroundColor: Colors.white,
+                      onPressed: _toggleSearchBar,
+                      child: Icon(
+                        Icons.route_outlined,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              if (vehicleProvider.lockedVehicles.isEmpty &&
+                  vehicleProvider.unlockedVehicles.isEmpty &&
+                  !showRideMenu &&
+                  !isParking)
+                // My Location Button
+                Obx(
+                  () => Positioned(
+                    bottom: () {
+                      if (mapController.isBikeMarkerSelected.value) {
+                        return 300.0;
+                      } else if (showRouteOverlay) {
+                        return 350.0;
+                      } else {
+                        return 100.0;
+                      }
+                    }(),
+                    right: 10,
+                    child: FloatingActionButton(
+                      mini: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      backgroundColor: Colors.white,
+                      onPressed: _getUserLocation,
+                      child: Icon(
+                        Icons.telegram,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
               // Membership Button
-              Obx(
-                () => Positioned(
-                  bottom: () {
-                    if (mapController.isBikeMarkerSelected.value) {
-                      return 300.0;
-                    } else if (showRouteOverlay) {
-                      return 400.0;
-                    } else {
-                      return 150.0;
-                    }
-                  }(),
-                  left: 10,
-                  child: FloatingActionButton(
-                    mini: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    backgroundColor: Colors.white,
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RidePassScreen()));
-                    },
-                    child: Icon(
-                      Icons.shopping_cart_outlined,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
+              // Obx(
+              //   () => Positioned(
+              //     bottom: () {
+              //       if (mapController.isBikeMarkerSelected.value) {
+              //         return 300.0;
+              //       } else if (showRouteOverlay) {
+              //         return 400.0;
+              //       } else {
+              //         return 150.0;
+              //       }
+              //     }(),
+              //     left: 10,
+              //     child: FloatingActionButton(
+              //       mini: true,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(15),
+              //       ),
+              //       backgroundColor: Colors.white,
+              //       onPressed: () {
+              //         Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => RidePassScreen()));
+              //       },
+              //       child: Icon(
+              //         Icons.shopping_cart_outlined,
+              //         color: Colors.black,
+              //       ),
+              //     ),
+              //   ),
+              // ),
 
               /// Popup Teks
               if (showTextPopup)

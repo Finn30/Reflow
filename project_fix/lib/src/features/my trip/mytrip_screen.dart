@@ -261,25 +261,25 @@ class MyTripCard extends StatelessWidget {
                       ],
                     ),
                     Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Rp0.00',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
-                        ),
-                        Text(
-                          'Paid',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue),
-                        ),
-                      ],
-                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.end,
+                    //   children: [
+                    //     Text(
+                    //       'Rp0.00',
+                    //       style: TextStyle(
+                    //           fontSize: 14,
+                    //           fontWeight: FontWeight.bold,
+                    //           color: Colors.red),
+                    //     ),
+                    //     Text(
+                    //       'Paid',
+                    //       style: TextStyle(
+                    //           fontSize: 14,
+                    //           fontWeight: FontWeight.bold,
+                    //           color: Colors.blue),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 SizedBox(height: 16),

@@ -458,37 +458,37 @@ class _RideMenuState extends State<RideMenu> with TickerProviderStateMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Rp",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "0",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          "Cost",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Text.rich(
+                    //       TextSpan(
+                    //         children: [
+                    //           TextSpan(
+                    //             text: "Rp",
+                    //             style: TextStyle(
+                    //               fontSize: 16,
+                    //               color: Colors.grey,
+                    //             ),
+                    //           ),
+                    //           TextSpan(
+                    //             text: "0",
+                    //             style: TextStyle(
+                    //               fontSize: 20,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Text(
+                    //       "Cost",
+                    //       style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontSize: 20,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

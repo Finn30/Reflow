@@ -345,25 +345,25 @@ class _ParkingMenuState extends State<ParkingMenu>
                         color: Colors.black,
                       ),
                     ),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Rp",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "0",
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Text.rich(
+                    //   TextSpan(
+                    //     children: [
+                    //       TextSpan(
+                    //         text: "Rp",
+                    //         style: TextStyle(
+                    //           fontSize: 16,
+                    //           color: Colors.grey,
+                    //         ),
+                    //       ),
+                    //       TextSpan(
+                    //         text: "0",
+                    //         style: TextStyle(
+                    //           fontSize: 20,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 8),
@@ -388,24 +388,24 @@ class _ParkingMenuState extends State<ParkingMenu>
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.currency_yen,
-                          color: Colors.blue,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Cost",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Icon(
+                    //       Icons.currency_yen,
+                    //       color: Colors.blue,
+                    //     ),
+                    //     SizedBox(width: 8),
+                    //     Text(
+                    //       "Cost",
+                    //       style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontSize: 16,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 SizedBox(height: 18),
@@ -437,25 +437,25 @@ class _ParkingMenuState extends State<ParkingMenu>
                         color: Colors.black,
                       ),
                     ),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Rp",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "0",
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Text.rich(
+                    //   TextSpan(
+                    //     children: [
+                    //       TextSpan(
+                    //         text: "Rp",
+                    //         style: TextStyle(
+                    //           fontSize: 16,
+                    //           color: Colors.grey,
+                    //         ),
+                    //       ),
+                    //       TextSpan(
+                    //         text: "0",
+                    //         style: TextStyle(
+                    //           fontSize: 20,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 8),
@@ -480,24 +480,24 @@ class _ParkingMenuState extends State<ParkingMenu>
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.currency_yen,
-                          color: Colors.blue,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Parking fee",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Icon(
+                    //       Icons.currency_yen,
+                    //       color: Colors.blue,
+                    //     ),
+                    //     SizedBox(width: 8),
+                    //     Text(
+                    //       "Parking fee",
+                    //       style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontSize: 16,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 SizedBox(height: 18),

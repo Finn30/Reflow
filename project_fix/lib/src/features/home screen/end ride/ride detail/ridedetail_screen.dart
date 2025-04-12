@@ -285,118 +285,118 @@ class RideDetailScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 8),
-                  Divider(),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Ride amount",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        "Rp 3800.00",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Unlock amount",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        "Rp 0.00",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Amount out of bonds",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        "Rp 0.00",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Suspended amount",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        "Rp 0.00",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Need to pay a fee",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        "Rp 3800.00",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Divider(),
+                  // SizedBox(height: 8),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "Ride amount",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       "Rp 3800.00",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 10),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "Unlock amount",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       "Rp 0.00",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 10),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "Amount out of bonds",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       "Rp 0.00",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 10),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "Suspended amount",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       "Rp 0.00",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 10),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "Need to pay a fee",
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       "Rp 3800.00",
+                  //       style: TextStyle(
+                  //         fontSize: 20,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.red,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

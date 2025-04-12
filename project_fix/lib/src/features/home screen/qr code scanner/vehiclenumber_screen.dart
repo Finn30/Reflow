@@ -67,7 +67,7 @@ class _VehicleNumberScreenState extends State<VehicleNumberScreen> {
                     CarouselSlider(
                       options: CarouselOptions(
                         height: 150,
-                        autoPlay: false,
+                        autoPlay: true,
                         enlargeCenterPage: true,
                         onPageChanged: (index, reason) {
                           setState(() {
@@ -162,36 +162,36 @@ class _VehicleNumberScreenState extends State<VehicleNumberScreen> {
                             .addLockedVehicle(vehicleNumber);
 
                         // Navigasi ke HomeScreen
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => HomeScreen()),
-                        // );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
 
-                        showRideOptionDialog(context, (isNormalRide) {
-                          if (isNormalRide) {
-                            // Jika Normal Ride, lanjut ke HomeScreen
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                            );
-                          } else {
-                            // Jika Package Ride, alihkan ke RidePassScreen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RidePassScreen()),
-                            ).then((_) {
-                              // Saat kembali dari RidePassScreen, kembali ke QRCodeScannerScreen
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        QRCodeScannerScreen()),
-                              );
-                            });
-                          }
-                        });
+                        // showRideOptionDialog(context, (isNormalRide) {
+                        //   if (isNormalRide) {
+                        //     // Jika Normal Ride, lanjut ke HomeScreen
+                        //     Navigator.pushReplacement(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => HomeScreen()),
+                        //     );
+                        //   } else {
+                        //     // Jika Package Ride, alihkan ke RidePassScreen
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => RidePassScreen()),
+                        //     ).then((_) {
+                        //       // Saat kembali dari RidePassScreen, kembali ke QRCodeScannerScreen
+                        //       Navigator.pushReplacement(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 QRCodeScannerScreen()),
+                        //       );
+                        //     });
+                        //   }
+                        // });
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

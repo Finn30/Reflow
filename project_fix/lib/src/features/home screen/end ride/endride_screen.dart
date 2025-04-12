@@ -59,98 +59,98 @@ class EndRideScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.currency_yen,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 2),
-                              Text(
-                                "Total Cost",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Rp 8800.00",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Divider(color: Colors.green),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Ride amount",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            "Rp 8800.00",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Divider(color: Colors.green),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Reduction period",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            "600 Second",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Divider(color: Colors.green),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Account balance Deduction",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            "-Rp 5800.00",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: [
+                      //     Row(
+                      //       children: [
+                      //         Icon(
+                      //           Icons.currency_yen,
+                      //           color: Colors.white,
+                      //         ),
+                      //         SizedBox(width: 2),
+                      //         Text(
+                      //           "Total Cost",
+                      //           style: TextStyle(
+                      //             fontSize: 20,
+                      //             color: Colors.white,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     Text(
+                      //       "Rp 8800.00",
+                      //       style: TextStyle(
+                      //         fontSize: 20,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // Divider(color: Colors.green),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: [
+                      //     Text(
+                      //       "Ride amount",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     Text(
+                      //       "Rp 8800.00",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // Divider(color: Colors.green),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: [
+                      //     Text(
+                      //       "Reduction period",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     Text(
+                      //       "600 Second",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // Divider(color: Colors.green),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: [
+                      //     Text(
+                      //       "Account balance Deduction",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     Text(
+                      //       "-Rp 5800.00",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
