@@ -231,11 +231,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     value: '${userData['phone'] ?? ''}',
                   ),
                   Divider(height: 0, thickness: 1, color: Colors.grey[200]),
-                  _buildProfileItem(
-                    context,
-                    label: 'Email',
-                    value: '${userData['email'] ?? ''}',
-                  ),
+                  // _buildProfileItem(
+                  //   context,
+                  //   label: 'Email',
+                  //   value: '${userData['email'] ?? ''}',
+                  // ),
                   SizedBox(height: 10),
                   // _buildProfileItem(
                   //   context,
@@ -324,28 +324,28 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: const Center(
-                        child: Text(
-                          'Delete Account',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DeleteAccountScreen()),
-                        );
-                      },
-                    ),
-                  ),
+                  // Container(
+                  //   color: Colors.white,
+                  //   child: ListTile(
+                  //     title: const Center(
+                  //       child: Text(
+                  //         'Delete Account',
+                  //         style: TextStyle(
+                  //           color: Colors.red,
+                  //           fontSize: 16,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => DeleteAccountScreen()),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                   SizedBox(height: 40),
                 ],
               ),

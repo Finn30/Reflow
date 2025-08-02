@@ -423,18 +423,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           trailing: Icon(Icons.chevron_right),
                         ),
-                        ListTile(
-                          leading: Icon(Icons.luggage),
-                          title: Text('My Trip'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyTripScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
-                        Divider(),
+                        // ListTile(
+                        //   leading: Icon(Icons.luggage),
+                        //   title: Text('My Trip'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => MyTripScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
+                        // Divider(),
                         // ListTile(
                         //   leading: Icon(Icons.account_balance_wallet),
                         //   title: Text('My Wallet'),
@@ -492,17 +492,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   },
                         //   trailing: Icon(Icons.chevron_right),
                         // ),
-                        ListTile(
-                          leading: Icon(Icons.info),
-                          title: Text('About Us'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AboutUsScreen()));
-                          },
-                          trailing: Icon(Icons.chevron_right),
-                        ),
+                        // ListTile(
+                        //   leading: Icon(Icons.info),
+                        //   title: Text('About Us'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => AboutUsScreen()));
+                        //   },
+                        //   trailing: Icon(Icons.chevron_right),
+                        // ),
                         // ListTile(
                         //   leading: Icon(Icons.language),
                         //   title: Text('Language Switch'),
